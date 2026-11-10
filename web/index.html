@@ -228,6 +228,17 @@
           </div>
         </div>
 
+        <!-- Interactive Cost vs Threshold Bowl Curve -->
+        <div class="card p-3" style="margin-top: 1.25rem; background: white; border: 1px solid var(--border); border-radius: 8px; padding: 1.25rem;">
+          <h4>Cost Curve: Finding the Optimal Threshold $t^*$ (The U-Shaped Bowl)</h4>
+          <p class="text-sm text-muted">
+            Notice how cost drops to its global minimum at <strong>$t^* \approx 0.167$</strong>, and then skyrockets if you increase the threshold toward the naive $0.50$ rule.
+          </p>
+          <div style="height: 250px; margin-top: 0.5rem;">
+            <canvas id="costCurveChart"></canvas>
+          </div>
+        </div>
+
         <!-- Dynamic Confusion Matrix & Policy Comparison -->
         <div class="grid-2" style="margin-top: 1rem;">
           <div class="cm-container">

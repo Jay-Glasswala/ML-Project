@@ -8,6 +8,7 @@ let globalData = null;
 let metricsData = null;
 let fairnessChart = null;
 let calibrationChart = null;
+let costCurveChart = null;
 
 // Group label decoders
 const GROUP_LABELS = {
@@ -132,6 +133,81 @@ function updateCostSimulator() {
   document.getElementById('policy-p50-cost').textContent = `${costP50.toFixed(3)} c_FP`;
   document.getElementById('policy-nobody-cost').textContent = `${costFlagNobody.toFixed(3)} c_FP`;
   document.getElementById('policy-everybody-cost').textContent = `${costFlagEverybody.toFixed(3)} c_FP`;
+
+  // Render or update the interactive U-shaped cost bowl curve
+  renderCostCurveChart(modelKey, r, tStar, costPerClient);
+}
+
+/**
+ * Interactive Cost Curve: Plots Total Cost vs Threshold (t in [0.03, 0.90])
+ * Illustrating why t* achieves the minimum financial loss.
+ */
+function renderCostCurveChart(modelKey, r, activeT, currentCost) {
+  if (!globalData) return;
+
+  const thresholds = [];
+  const costs = [];
+  const clients = globalData.clients;
+  const n = clients.length;
+
+  for (let t = 0.05; t <= 0.85; t += 0.025) {
+    let fn = 0, fp = 0;
+    for (let i = 0; i < n; i++) {
+      const c = clients[i];
+      const p = c.p[modelKey] !== undefined ? c.p[modelKey] : 0.0;
+      if (c.y === 1 && p < t) fn++;
+      else if (c.y === 0 && p >= t) fp++;
+    }
+    thresholds.push(parseFloat(t.toFixed(3)));
+    costs.push(parseFloat(((fn * r + fp) / n).toFixed(4)));
+  }
+
+  const ctx = document.getElementById('costCurveChart').getContext('2d');
+  if (costCurveChart) {
+    costCurveChart.destroy();
+  }
+
+  costCurveChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: thresholds.map(t => t.toFixed(2)),
+      datasets: [
+        {
+          label: `Expected Cost (r = ${r.toFixed(1)})`,
+          data: costs,
+          borderColor: '#1e3a8a',
+          backgroundColor: 'rgba(59, 130, 246, 0.1)',
+          fill: true,
+          tension: 0.2,
+          pointRadius: 2,
+          pointHoverRadius: 6,
+          borderWidth: 2.5
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: true, position: 'top' },
+        tooltip: {
+          callbacks: {
+            label: (ctx) => `Threshold: ${thresholds[ctx.dataIndex]} | Cost: ${ctx.parsed.y.toFixed(3)} c_FP`
+          }
+        }
+      },
+      scales: {
+        x: {
+          title: { display: true, text: 'Decision Threshold (t)' },
+          grid: { display: false }
+        },
+        y: {
+          title: { display: true, text: 'Expected Cost per Client (c_FP)' },
+          beginAtZero: false
+        }
+      }
+    }
+  });
 }
 
 /**
