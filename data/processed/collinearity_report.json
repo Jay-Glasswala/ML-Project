@@ -1,0 +1,110 @@
+{
+  "bill_correlation_matrix": {
+    "BILL_AMT1": {
+      "BILL_AMT1": 1.0,
+      "BILL_AMT2": 0.9552,
+      "BILL_AMT3": 0.8914,
+      "BILL_AMT4": 0.8641,
+      "BILL_AMT5": 0.8322,
+      "BILL_AMT6": 0.8046
+    },
+    "BILL_AMT2": {
+      "BILL_AMT1": 0.9552,
+      "BILL_AMT2": 1.0,
+      "BILL_AMT3": 0.9268,
+      "BILL_AMT4": 0.895,
+      "BILL_AMT5": 0.8604,
+      "BILL_AMT6": 0.833
+    },
+    "BILL_AMT3": {
+      "BILL_AMT1": 0.8914,
+      "BILL_AMT2": 0.9268,
+      "BILL_AMT3": 1.0,
+      "BILL_AMT4": 0.923,
+      "BILL_AMT5": 0.8816,
+      "BILL_AMT6": 0.8529
+    },
+    "BILL_AMT4": {
+      "BILL_AMT1": 0.8641,
+      "BILL_AMT2": 0.895,
+      "BILL_AMT3": 0.923,
+      "BILL_AMT4": 1.0,
+      "BILL_AMT5": 0.9417,
+      "BILL_AMT6": 0.9042
+    },
+    "BILL_AMT5": {
+      "BILL_AMT1": 0.8322,
+      "BILL_AMT2": 0.8604,
+      "BILL_AMT3": 0.8816,
+      "BILL_AMT4": 0.9417,
+      "BILL_AMT5": 1.0,
+      "BILL_AMT6": 0.9476
+    },
+    "BILL_AMT6": {
+      "BILL_AMT1": 0.8046,
+      "BILL_AMT2": 0.833,
+      "BILL_AMT3": 0.8529,
+      "BILL_AMT4": 0.9042,
+      "BILL_AMT5": 0.9476,
+      "BILL_AMT6": 1.0
+    }
+  },
+  "bill_vif": {
+    "BILL_AMT1": 11.49,
+    "BILL_AMT2": 17.08,
+    "BILL_AMT3": 10.33,
+    "BILL_AMT4": 13.76,
+    "BILL_AMT5": 16.03,
+    "BILL_AMT6": 9.97
+  },
+  "pay_correlation_matrix": {
+    "PAY_1": {
+      "PAY_1": 1.0,
+      "PAY_2": 0.6708,
+      "PAY_3": 0.5733,
+      "PAY_4": 0.5393,
+      "PAY_5": 0.5094,
+      "PAY_6": 0.4738
+    },
+    "PAY_2": {
+      "PAY_1": 0.6708,
+      "PAY_2": 1.0,
+      "PAY_3": 0.7662,
+      "PAY_4": 0.6596,
+      "PAY_5": 0.619,
+      "PAY_6": 0.5733
+    },
+    "PAY_3": {
+      "PAY_1": 0.5733,
+      "PAY_2": 0.7662,
+      "PAY_3": 1.0,
+      "PAY_4": 0.7727,
+      "PAY_5": 0.6825,
+      "PAY_6": 0.6277
+    },
+    "PAY_4": {
+      "PAY_1": 0.5393,
+      "PAY_2": 0.6596,
+      "PAY_3": 0.7727,
+      "PAY_4": 1.0,
+      "PAY_5": 0.8204,
+      "PAY_6": 0.7151
+    },
+    "PAY_5": {
+      "PAY_1": 0.5094,
+      "PAY_2": 0.619,
+      "PAY_3": 0.6825,
+      "PAY_4": 0.8204,
+      "PAY_5": 1.0,
+      "PAY_6": 0.8169
+    },
+    "PAY_6": {
+      "PAY_1": 0.4738,
+      "PAY_2": 0.5733,
+      "PAY_3": 0.6277,
+      "PAY_4": 0.7151,
+      "PAY_5": 0.8169,
+      "PAY_6": 1.0
+    }
+  }
+}

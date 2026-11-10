@@ -1,0 +1,170 @@
+{
+  "SEX": {
+    "Male": {
+      "raw_code": 1,
+      "count": 2332,
+      "defaulters_count": 569,
+      "default_base_rate": 0.244,
+      "false_alarm_rate": 0.3432,
+      "false_alarm_rate_ci95": [
+        0.3221,
+        0.3644
+      ],
+      "missed_defaulter_rate": 0.2953,
+      "missed_defaulter_rate_ci95": [
+        0.2588,
+        0.3346
+      ],
+      "statistically_reliable": true,
+      "reliability_note": "Reliable sample"
+    },
+    "Female": {
+      "raw_code": 2,
+      "count": 3661,
+      "defaulters_count": 757,
+      "default_base_rate": 0.2068,
+      "false_alarm_rate": 0.3237,
+      "false_alarm_rate_ci95": [
+        0.3072,
+        0.3395
+      ],
+      "missed_defaulter_rate": 0.2642,
+      "missed_defaulter_rate_ci95": [
+        0.2337,
+        0.2963
+      ],
+      "statistically_reliable": true,
+      "reliability_note": "Reliable sample"
+    }
+  },
+  "EDUCATION": {
+    "Graduate School": {
+      "raw_code": 1,
+      "count": 2090,
+      "defaulters_count": 375,
+      "default_base_rate": 0.1794,
+      "false_alarm_rate": 0.2985,
+      "false_alarm_rate_ci95": [
+        0.2783,
+        0.3206
+      ],
+      "missed_defaulter_rate": 0.3467,
+      "missed_defaulter_rate_ci95": [
+        0.3003,
+        0.3961
+      ],
+      "statistically_reliable": true,
+      "reliability_note": "Reliable sample"
+    },
+    "University": {
+      "raw_code": 2,
+      "count": 2769,
+      "defaulters_count": 671,
+      "default_base_rate": 0.2423,
+      "false_alarm_rate": 0.3589,
+      "false_alarm_rate_ci95": [
+        0.338,
+        0.3786
+      ],
+      "missed_defaulter_rate": 0.2385,
+      "missed_defaulter_rate_ci95": [
+        0.2069,
+        0.2707
+      ],
+      "statistically_reliable": true,
+      "reliability_note": "Reliable sample"
+    },
+    "High School": {
+      "raw_code": 3,
+      "count": 1044,
+      "defaulters_count": 275,
+      "default_base_rate": 0.2634,
+      "false_alarm_rate": 0.3563,
+      "false_alarm_rate_ci95": [
+        0.3234,
+        0.3888
+      ],
+      "missed_defaulter_rate": 0.2691,
+      "missed_defaulter_rate_ci95": [
+        0.2207,
+        0.3252
+      ],
+      "statistically_reliable": true,
+      "reliability_note": "Reliable sample"
+    },
+    "Others": {
+      "raw_code": 4,
+      "count": 90,
+      "defaulters_count": 5,
+      "default_base_rate": 0.0556,
+      "false_alarm_rate": 0.0706,
+      "false_alarm_rate_ci95": [
+        0.0233,
+        0.1294
+      ],
+      "missed_defaulter_rate": 0.8,
+      "missed_defaulter_rate_ci95": [
+        0.3333,
+        1.0
+      ],
+      "statistically_reliable": false,
+      "reliability_note": "Small group (<100 rows) - interpret with caution"
+    }
+  },
+  "MARRIAGE": {
+    "Married": {
+      "raw_code": 1,
+      "count": 2756,
+      "defaulters_count": 663,
+      "default_base_rate": 0.2406,
+      "false_alarm_rate": 0.3278,
+      "false_alarm_rate_ci95": [
+        0.3078,
+        0.3479
+      ],
+      "missed_defaulter_rate": 0.27,
+      "missed_defaulter_rate_ci95": [
+        0.2383,
+        0.3027
+      ],
+      "statistically_reliable": true,
+      "reliability_note": "Reliable sample"
+    },
+    "Single": {
+      "raw_code": 2,
+      "count": 3172,
+      "defaulters_count": 648,
+      "default_base_rate": 0.2043,
+      "false_alarm_rate": 0.3328,
+      "false_alarm_rate_ci95": [
+        0.3141,
+        0.3503
+      ],
+      "missed_defaulter_rate": 0.284,
+      "missed_defaulter_rate_ci95": [
+        0.2508,
+        0.3197
+      ],
+      "statistically_reliable": true,
+      "reliability_note": "Reliable sample"
+    },
+    "Others": {
+      "raw_code": 3,
+      "count": 65,
+      "defaulters_count": 15,
+      "default_base_rate": 0.2308,
+      "false_alarm_rate": 0.38,
+      "false_alarm_rate_ci95": [
+        0.2548,
+        0.5107
+      ],
+      "missed_defaulter_rate": 0.3333,
+      "missed_defaulter_rate_ci95": [
+        0.1,
+        0.5625
+      ],
+      "statistically_reliable": false,
+      "reliability_note": "Small group (<100 rows) - interpret with caution"
+    }
+  }
+}

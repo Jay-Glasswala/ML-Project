@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cost-Aware Credit Card Default Prediction | ES 335</title>
+  <link rel="stylesheet" href="styles.css">
+  <!-- Chart.js CDN for responsive, publication-grade interactive charts -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <!-- Header / Navigation -->
+  <header class="site-header">
+    <div class="container header-container">
+      <div class="logo-area">
+        <span class="badge">ES 335 Machine Learning</span>
+        <h1>Cost-Aware Credit Card Default Prediction</h1>
+        <p class="subtitle">Asymmetric Cost Decision Theory, Calibration & Subgroup Fairness Audit</p>
+      </div>
+      <div class="team-meta">
+        <p><strong>Team Members:</strong></p>
+        <p>Anant Shukla (25110030) &bull; Jay R. Glasswala (25110147)</p>
+        <a href="https://github.com/Jay-Glasswala/ML-Project" target="_blank" class="github-link">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+          View Source Repository
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Sticky Quick Navigation Bar -->
+  <nav class="nav-bar">
+    <div class="container nav-links">
+      <a href="#question">Question</a>
+      <a href="#data">Data & Cleaning</a>
+      <a href="#preprocessing">Pipelines</a>
+      <a href="#methods">Methods</a>
+      <a href="#simulator">Cost Simulator</a>
+      <a href="#fairness">Fairness Audit</a>
+      <a href="#evaluation">Results</a>
+      <a href="#calibration">Calibration</a>
+      <a href="#errors">Errors & Limitations</a>
+      <a href="#reproduction">Reproduction</a>
+    </div>
+  </nav>
+
+  <main class="container">
+    <!-- Executive Highlight Banner -->
+    <section class="card highlight-card">
+      <h2>The Core Thesis & Motivation</h2>
+      <p>
+        In financial risk assessment, accuracy is a dangerously misleading metric. In our credit dataset of 30,000 Taiwanese clients, defaults occur at a rate of <strong>~22.1%</strong>. A trivial rule predicting "nobody defaults" scores <strong>77.9% accuracy</strong> with <strong>0% recall</strong>, resulting in total loss of unpaid principal balances.
+      </p>
+      <p>
+        Real-world default decisions are asymmetric: missing an actual defaulter ($c_{FN}$) is far more costly than flagging a good customer for credit review ($c_{FP}$). 
+        Under Bayes decision theory, the optimal decision threshold is:
+      </p>
+      <div class="math-callout">
+        $$t^* = \frac{c_{FP}}{c_{FP} + c_{FN}} = \frac{1}{1 + r}, \quad \text{where } r = \frac{c_{FN}}{c_{FP}}$$
+      </div>
+      <p>
+        When a missed defaulter is $5\times$ more costly than a false alarm ($r = 5$), the optimal decision threshold is <strong>$t^* \approx 0.167$</strong>. Evaluating models under the naive default threshold of $0.5$ leads to massive financial loss.
+      </p>
+    </section>
+
+    <!-- Section 1: Research Question -->
+    <section id="question" class="section-card">
+      <span class="section-num">Section 01</span>
+      <h2>1. Research Question & Claim Boundaries</h2>
+      <div class="grid-2">
+        <div>
+          <h3>Primary Research Question</h3>
+          <p class="quote-box">
+            "Using a client's repayment status, bill amounts, payment amounts and demographics from April to September 2005, can we predict whether they default next month, and which decision threshold minimizes expected cost when a missed defaulter costs more than a false alarm? Are the predicted probabilities calibrated, and how do regularized logistic regression, an SVM, random forest and boosting compare, including how ridge and lasso treat the six monthly bill-amount columns, which I expect to be strongly correlated?"
+          </p>
+        </div>
+        <div>
+          <h3>Honest Claim Boundaries</h3>
+          <ul class="bullet-list">
+            <li><strong>No Causal Claims:</strong> Features are predictive markers of delinquency, not causal mechanisms.</li>
+            <li><strong>Geographic & Temporal Bounds:</strong> Data represents a single 2005 snapshot during Taiwan's credit-card expansion and stress cycle. Unconditional base rates will shift across economic regimes.</li>
+            <li><strong>Not a Lending Tool:</strong> This model is an operational risk benchmark for account monitoring, not a credit underwriting engine.</li>
+            <li><strong>No Fairness by Unawareness:</strong> Excluding protected demographic features (`SEX`, `MARRIAGE`) from inputs does not guarantee outcome parity. We conduct post-hoc audits to measure error rates directly.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 2: Data Understanding & Cleaning -->
+    <section id="data" class="section-card">
+      <span class="section-num">Section 02</span>
+      <h2>2. Data Understanding & Quality Checks</h2>
+      <p>
+        <strong>Dataset:</strong> UCI Machine Learning Repository — <em>Default of Credit Card Clients</em> (Yeh & Lien, 2009). Available under CC BY 4.0.
+      </p>
+      <div class="stat-grid">
+        <div class="stat-card">
+          <span class="stat-val" id="raw-rows">30,000</span>
+          <span class="stat-label">Raw Observations</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-val" id="dup-rows">35</span>
+          <span class="stat-label">Exact Duplicates Dropped</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-val" id="dedup-rows">29,965</span>
+          <span class="stat-label">Deduplicated Clients</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-val" id="base-rate">22.13%</span>
+          <span class="stat-label">Overall Default Rate</span>
+        </div>
+      </div>
+
+      <div class="grid-2" style="margin-top: 1.5rem;">
+        <div>
+          <h3>Documented Data Transformations</h3>
+          <ul class="bullet-list">
+            <li><strong>ID Dropped:</strong> Sequential identifier removed before all analysis.</li>
+            <li><strong>PAY_0 Renamed to PAY_1:</strong> The dataset documented PAY_0, PAY_2..PAY_6 without PAY_1; standardized to PAY_1..PAY_6.</li>
+            <li><strong>EDUCATION Recoding:</strong> Undocumented codes {0, 5, 6} (345 rows) grouped into code 4 ('Others').</li>
+            <li><strong>MARRIAGE Recoding:</strong> Undocumented code {0} (54 rows) grouped into code 3 ('Others').</li>
+            <li><strong>Target Variable:</strong> <code>default payment next month</code> standardized to binary <code>default</code>.</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Longitudinal Bill Collinearity (Training Fold VIF)</h3>
+          <p>
+            The six bill amount columns (`BILL_AMT1` to `BILL_AMT6`) display substantial multicollinearity on the training partition ($N=23,972$).
+          </p>
+          <table class="data-table">
+            <thead>
+              <tr><th>Feature</th><th>VIF</th><th>Correlation w/ Prev Month</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>BILL_AMT1</code></td><td><strong>11.49</strong></td><td>— (Current balance)</td></tr>
+              <tr><td><code>BILL_AMT2</code></td><td><strong>17.08</strong></td><td>0.955 (w/ BILL_AMT1)</td></tr>
+              <tr><td><code>BILL_AMT3</code></td><td><strong>10.33</strong></td><td>0.927 (w/ BILL_AMT2)</td></tr>
+              <tr><td><code>BILL_AMT4</code></td><td><strong>13.76</strong></td><td>0.923 (w/ BILL_AMT3)</td></tr>
+              <tr><td><code>BILL_AMT5</code></td><td><strong>16.03</strong></td><td>0.942 (w/ BILL_AMT4)</td></tr>
+              <tr><td><code>BILL_AMT6</code></td><td><strong>9.97</strong></td><td>0.948 (w/ BILL_AMT5)</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 3: Preprocessing & Leakage Control -->
+    <section id="preprocessing" class="section-card">
+      <span class="section-num">Section 03</span>
+      <h2>3. Leakage-Free Preprocessing & Pipeline Architecture</h2>
+      <div class="protocol-box">
+        <div class="step-card">
+          <h4>1. Fixed Stratified Split</h4>
+          <p>80% Train (23,972 rows) / 20% Test (5,993 rows) split once with <code>random_state=42</code>. The test set was sealed until final confirmation.</p>
+        </div>
+        <div class="step-card">
+          <h4>2. Feature Matrix Isolation</h4>
+          <p><code>SEX</code> and <code>MARRIAGE</code> were stripped from feature matrix $X$ and held in audit metadata. <code>EDUCATION</code> and <code>AGE</code> remain active inputs.</p>
+        </div>
+        <div class="step-card">
+          <h4>3. Scikit-Learn Pipelines</h4>
+          <p>All continuous scalers (<code>StandardScaler</code>) and categorical encoders (<code>OneHotEncoder</code>) are wrapped inside pipelines and fit strictly on training folds inside 5-Fold CV.</p>
+        </div>
+        <div class="step-card">
+          <h4>4. Automated Verification</h4>
+          <p>Passing test suite (<code>pytest</code>) verifies disjoint indices, absence of protected variables in $X$, and leak-free re-fitting.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 4: INTERACTIVE COST SIMULATOR (Useful Interaction 1) -->
+    <section id="simulator" class="section-card interactive-section">
+      <div class="interactive-badge">Primary Course Interaction</div>
+      <h2>4. Interactive Cost-Ratio Decision Simulator</h2>
+      <p>
+        Explore how changing the relative cost of a missed defaulter shifts the optimal decision threshold $t^* = \frac{1}{1 + r}$ across <strong>5,993 held-out test clients</strong>.
+      </p>
+
+      <div class="simulator-controls">
+        <div class="control-group">
+          <label for="model-select"><strong>Select Predictive Model:</strong></label>
+          <select id="model-select" class="form-select">
+            <option value="hist_gradient_boosting">HistGradientBoosting (Gradient Boosting)</option>
+            <option value="random_forest">Random Forest (Bagging)</option>
+            <option value="rbf_svm">RBF-Kernel SVM (Platt Scaled)</option>
+            <option value="ridge_logistic">Ridge Logistic (L2 Regularized)</option>
+            <option value="lasso_logistic">Lasso Logistic (L1 Sparse)</option>
+            <option value="elastic_net">Elastic-Net Logistic</option>
+            <option value="plain_logistic">Plain Logistic Regression (Unregularized)</option>
+          </select>
+        </div>
+
+        <div class="control-group slider-group">
+          <div class="slider-label-row">
+            <label for="cost-slider"><strong>Cost Ratio ($r = c_{FN} / c_{FP}$):</strong></label>
+            <span id="ratio-display" class="highlight-val">5.0 : 1</span>
+          </div>
+          <input type="range" id="cost-slider" min="1" max="10" step="0.5" value="5">
+          <div class="slider-ticks">
+            <span>1:1 ($t^*=0.50$)</span>
+            <span>3:1 ($t^*=0.25$)</span>
+            <span>5:1 ($t^*=0.17$)</span>
+            <span>10:1 ($t^*=0.09$)</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Live Dynamic Metrics Dashboard -->
+      <div class="sim-dashboard">
+        <!-- Live Metrics Cards -->
+        <div class="live-metrics">
+          <div class="metric-card">
+            <span class="m-label">Active Threshold ($t^*$)</span>
+            <span class="m-val" id="active-thresh">0.167</span>
+          </div>
+          <div class="metric-card">
+            <span class="m-label">Defaulter Catch Rate (Recall)</span>
+            <span class="m-val" id="active-recall">--</span>
+          </div>
+          <div class="metric-card">
+            <span class="m-label">False Alarm Rate (FPR)</span>
+            <span class="m-val" id="active-fpr">--</span>
+          </div>
+          <div class="metric-card highlight-metric">
+            <span class="m-label">Cost per Client ($c_{FP}$ units)</span>
+            <span class="m-val" id="active-cost">--</span>
+          </div>
+        </div>
+
+        <!-- Dynamic Confusion Matrix & Policy Comparison -->
+        <div class="grid-2" style="margin-top: 1rem;">
+          <div class="cm-container">
+            <h4>Live Confusion Matrix (Test Set, N=5,993)</h4>
+            <div class="cm-grid">
+              <div class="cm-cell tn-cell">
+                <span class="cm-title">True Negative (TN)</span>
+                <span class="cm-num" id="cm-tn">--</span>
+                <span class="cm-desc">Correctly Kept Open</span>
+              </div>
+              <div class="cm-cell fp-cell">
+                <span class="cm-title">False Positive (FP)</span>
+                <span class="cm-num" id="cm-fp">--</span>
+                <span class="cm-desc">False Alarm (Cost = 1)</span>
+              </div>
+              <div class="cm-cell fn-cell">
+                <span class="cm-title">False Negative (FN)</span>
+                <span class="cm-num" id="cm-fn">--</span>
+                <span class="cm-desc">Missed Default (Cost = <span id="cm-fn-cost">5</span>)</span>
+              </div>
+              <div class="cm-cell tp-cell">
+                <span class="cm-title">True Positive (TP)</span>
+                <span class="cm-num" id="cm-tp">--</span>
+                <span class="cm-desc">Caught Defaulter</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="policy-container">
+            <h4>Benchmark Against Trivial Policies</h4>
+            <div class="policy-row">
+              <div>
+                <strong>Our Model at $t^*$</strong>
+                <p class="text-sm">Cost-minimizing Bayes decision</p>
+              </div>
+              <span class="badge badge-success" id="policy-model-cost">--</span>
+            </div>
+            <div class="policy-row">
+              <div>
+                <strong>Standard $t = 0.50$ Rule</strong>
+                <p class="text-sm">Naive symmetric assumption</p>
+              </div>
+              <span class="badge badge-warning" id="policy-p50-cost">--</span>
+            </div>
+            <div class="policy-row">
+              <div>
+                <strong>Flag Nobody Policy</strong>
+                <p class="text-sm">Catches 0 defaulters ($0.2212 \times r$)</p>
+              </div>
+              <span class="badge badge-danger" id="policy-nobody-cost">--</span>
+            </div>
+            <div class="policy-row">
+              <div>
+                <strong>Flag Everybody Policy</strong>
+                <p class="text-sm">Blocks all clients ($1 - 0.2212 = 0.779$)</p>
+              </div>
+              <span class="badge badge-neutral" id="policy-everybody-cost">0.779</span>
+            </div>
+            <p class="note-text">
+              <strong>Break-even Insight:</strong> Flagging everybody beats flagging nobody once $r > \frac{0.7788}{0.2212} \approx 3.52$. At $r=5$, our model successfully outperforms both trivial policies!
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 5: INTERACTIVE SUBGROUP FAIRNESS AUDIT (Useful Interaction 2) -->
+    <section id="fairness" class="section-card interactive-section">
+      <div class="interactive-badge">Subgroup Audit Interaction</div>
+      <h2>5. Demographic Fairness & Error Disparity Audit</h2>
+      <p>
+        While protected features were excluded from training, historical correlations can propagate disparate error rates. Inspect the False Alarm Rate and Missed Defaulter Rate across demographic groups at the active threshold.
+      </p>
+
+      <div class="simulator-controls">
+        <div class="control-group">
+          <label for="fairness-group-select"><strong>Audit Demographic Attribute:</strong></label>
+          <select id="fairness-group-select" class="form-select">
+            <option value="SEX">Sex (1 = Male, 2 = Female)</option>
+            <option value="EDUCATION">Education (Grad, Univ, High School, Others)</option>
+            <option value="MARRIAGE">Marital Status (Married, Single, Others)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="grid-2" style="margin-top: 1rem;">
+        <div>
+          <h4>Error Rates Across Subgroups</h4>
+          <div style="height: 280px;">
+            <canvas id="fairnessChart"></canvas>
+          </div>
+        </div>
+        <div>
+          <h4>Subgroup Audit Table</h4>
+          <div class="table-responsive">
+            <table class="data-table" id="fairness-table">
+              <thead>
+                <tr>
+                  <th>Group</th>
+                  <th>N (Test)</th>
+                  <th>Base Default</th>
+                  <th>False Alarm Rate</th>
+                  <th>Missed Defaulters</th>
+                </tr>
+              </thead>
+              <tbody id="fairness-tbody">
+                <!-- Dynamically populated -->
+              </tbody>
+            </table>
+          </div>
+          <p class="note-text" style="margin-top: 0.5rem;">
+            * Groups with $N < 100$ in the test set (e.g. Others in Education) are flagged as statistically unreliable due to wide confidence intervals. Group-specific thresholds are deliberately not applied to prevent direct disparate treatment.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 6: Comprehensive Model Comparison -->
+    <section id="evaluation" class="section-card">
+      <span class="section-num">Section 04</span>
+      <h2>6. Empirical Results & Method Comparisons</h2>
+      <p>
+        Models evaluated on the 5,993 held-out test instances. 95% Confidence Intervals are computed via 1,000 stratified bootstrap resamples.
+      </p>
+
+      <div class="table-responsive">
+        <table class="data-table" id="results-table">
+          <thead>
+            <tr>
+              <th>Model Architecture</th>
+              <th>PR-AUC [95% CI]</th>
+              <th>Log-Loss [95% CI]</th>
+              <th>Brier Score</th>
+              <th>ECE (Quantile)</th>
+              <th>Cost @ r=5 [95% CI]</th>
+              <th>Recall @ P&ge;0.50</th>
+            </tr>
+          </thead>
+          <tbody id="results-tbody">
+            <!-- Dynamically populated from metrics_summary.json -->
+          </tbody>
+        </table>
+      </div>
+
+      <div class="grid-2" style="margin-top: 1.5rem;">
+        <div class="card p-3">
+          <h4>Collinearity Dynamics: Ridge vs Lasso</h4>
+          <p>
+            Due to pairwise correlations among bills ($r$ up to $0.955$):
+          </p>
+          <ul class="bullet-list">
+            <li><strong>Ridge ($L_2$):</strong> Smoothly shrinks all six bill coefficients together, keeping them balanced and preserving historical continuity.</li>
+            <li><strong>Lasso ($L_1$):</strong> Induces sparsity by eliminating redundant bill months. In bootstrap resamples, Lasso consistently retains `BILL_AMT1` (the most recent balance) while driving intermediate months toward zero.</li>
+            <li><strong>Elastic-Net:</strong> Yields stable non-zero coefficients without erratic dropouts.</li>
+          </ul>
+        </div>
+        <div class="card p-3">
+          <h4>Paired Bootstrap Hypothesis Testing</h4>
+          <p>
+            Comparing our best ensemble (<code>HistGradientBoosting</code>) against the <code>Plain Logistic Regression</code> baseline across 1,000 paired resamples:
+          </p>
+          <div id="paired-test-output">
+            <p><strong>$\Delta$ PR-AUC:</strong> <span id="delta-prauc">Loading...</span></p>
+            <p><strong>$\Delta$ Expected Cost ($r=5$):</strong> <span id="delta-cost">Loading...</span></p>
+          </div>
+          <p class="text-sm text-muted">
+            A confidence interval that excludes zero provides empirical evidence of genuine improvement over the baseline.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 7: Probability Calibration -->
+    <section id="calibration" class="section-card">
+      <span class="section-num">Section 05</span>
+      <h2>7. Probability Calibration & Reliability Analysis</h2>
+      <div class="grid-2">
+        <div>
+          <h4>Reliability Curves (Equal-Frequency Bins)</h4>
+          <p class="text-sm">
+            Equal-frequency quantile binning is utilized because ~78% of clients have low default risk. Standard equal-width bins would leave higher probabilities empty.
+          </p>
+          <div style="height: 280px;">
+            <canvas id="calibrationChart"></canvas>
+          </div>
+        </div>
+        <div>
+          <h4>Why Calibration Matters for Cost Thresholds</h4>
+          <p>
+            The decision threshold $t^* = \frac{1}{1 + r}$ relies strictly on the mathematical assumption that if a model outputs $p(x) = 0.20$, exactly 20% of such clients actually default.
+          </p>
+          <ul class="bullet-list">
+            <li><strong>Tree Ensembles (Random Forest / Boosting):</strong> Tend to push probabilities away from 0 and 1 due to leaf averaging, but HistGradientBoosting achieves excellent log-loss and well-aligned quantiles.</li>
+            <li><strong>SVM Platt Scaling:</strong> Fitting a sigmoid over decision margins produces smooth probabilities that conform to empirical base rates.</li>
+            <li><strong>Class Weighting Warning:</strong> Training with class weights artificially inflates probabilities, destroying calibration and rendering formula-based threshold shifting invalid.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 8: Error Profiles & Limitations -->
+    <section id="errors" class="section-card">
+      <span class="section-num">Section 06</span>
+      <h2>8. Error Inspection, Limitations & Claims Integrity</h2>
+      <div class="grid-2">
+        <div>
+          <h3>Representative Error Profiles at $t^*$</h3>
+          <ul class="bullet-list">
+            <li><strong>False Positives (False Alarms):</strong> Clients with a single past delayed payment (`PAY_1 = 1` or `2`) who recently experienced a sharp balance drop (`PAY_AMT1` large). The model conservatively flags them due to payment delay, but the client managed to settle their balance.</li>
+            <li><strong>False Negatives (Missed Defaulters):</strong> Clients with pristine zero-delay repayment histories (`PAY_1 = 0` or `-1`) who maintained low utilization until a sudden economic shock in September, defaulting with no prior delinquency signals.</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Honest Project Limitations</h3>
+          <ul class="bullet-list">
+            <li><strong>No Date Column (Temporal Split Missing):</strong> The dataset does not provide calendar timestamps for transactions, preventing true out-of-time walk-forward validation.</li>
+            <li><strong>Fixed Cost Ratio Simplification:</strong> We evaluate fixed cost ratios $r \in [1, 10]$. In real banking, losses scale continuously with client exposure ($c_{FN} \approx \text{Balance} \times \text{LGD}$).</li>
+            <li><strong>Credit Limit Endogeneity:</strong> A client's credit limit reflects past approval policies of Taiwanese banks, functioning partially as an endogenous proxy.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 9: Reproducibility & AI Disclosure -->
+    <section id="reproduction" class="section-card">
+      <span class="section-num">Section 07</span>
+      <h2>9. Reproducibility & Responsible AI Disclosure</h2>
+      <div class="repro-box">
+        <h3>How to Reproduce Results from Scratch</h3>
+        <pre><code># 1. Clone repository
+git clone https://github.com/Jay-Glasswala/ML-Project.git
+cd ML-Project
+
+# 2. Install pinned dependencies
+pip install -r requirements.txt
+
+# 3. Run automated tests (verifying schema & zero-leakage)
+pytest
+
+# 4. Execute end-to-end pipeline (download, clean, train, evaluate, audit)
+python run_all.py</code></pre>
+      </div>
+
+      <div class="grid-2" style="margin-top: 1rem;">
+        <div>
+          <h4>Team Contribution Statement</h4>
+          <p><strong>Anant Shukla (25110030):</strong> Data loader architecture, duplicate removal, schema verification, pipeline encapsulation, collinearity/VIF study, Ridge vs Lasso regularizer experiments, fairness error audit.</p>
+          <p><strong>Jay R. Glasswala (25110147):</strong> Tree & boosting ensembles, RBF-SVM Platt scaling, calibration/ECE analysis, Bayes cost threshold simulator, paired bootstrap testing, and interactive web application.</p>
+        </div>
+        <div>
+          <h4>Responsible AI Disclosure</h4>
+          <p>
+            AI assistants (Anthropic Claude, Google Gemini, OpenAI ChatGPT) were utilized for code structuring, testing design, and layout optimization. Every mathematical derivation, data transformation, model output, and metric was independently verified against empirical script runs.
+          </p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-content">
+      <p>&copy; 2026 Anant Shukla & Jay R. Glasswala. ES 335 Machine Learning Course Project.</p>
+      <p>Published on GitHub Pages &bull; Dataset: UCI Default of Credit Card Clients (CC BY 4.0)</p>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

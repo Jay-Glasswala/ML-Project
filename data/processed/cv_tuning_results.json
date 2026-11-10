@@ -1,0 +1,53 @@
+{
+  "majority_class": {
+    "best_params": {},
+    "cv_log_loss": 7.974951466913067,
+    "cv_log_loss_std": 0.0027762198799100085
+  },
+  "plain_logistic": {
+    "best_params": {},
+    "cv_log_loss": 0.4659462050988344,
+    "cv_log_loss_std": 0.004545705096358574
+  },
+  "ridge_logistic": {
+    "best_params": {
+      "C": 0.1
+    },
+    "cv_log_loss": 0.46591295120009024
+  },
+  "lasso_logistic": {
+    "best_params": {
+      "C": 1.0
+    },
+    "cv_log_loss": 0.4658967943496661
+  },
+  "elastic_net": {
+    "best_params": {
+      "C": 0.1,
+      "l1_ratio": 0.5
+    },
+    "cv_log_loss": 0.4658684436405601
+  },
+  "rbf_svm": {
+    "best_params": {
+      "C": 1.0,
+      "gamma": "0.05",
+      "subsample_size": 6000
+    },
+    "cv_log_loss": 0.4509902596473586
+  },
+  "random_forest": {
+    "best_params": {
+      "n_estimators": 150,
+      "max_depth": 10
+    },
+    "cv_log_loss": 0.4278885023659547
+  },
+  "hist_gradient_boosting": {
+    "best_params": {
+      "learning_rate": 0.05,
+      "max_iter": 100
+    },
+    "cv_log_loss": 0.42654497974802047
+  }
+}

@@ -1,0 +1,1241 @@
+{
+  "majority_class": {
+    "pr_auc": 0.2213,
+    "log_loss": 7.975,
+    "brier_score": 0.2213,
+    "ece_equal_frequency": 0.2213,
+    "recall_at_p50": 0.0,
+    "cost_r5": 1.1063,
+    "cost_sensitivity": {
+      "1": {
+        "r": 1.0,
+        "t_star": 0.5,
+        "cost_per_client": 0.2213,
+        "flag_nobody_cost": 0.2213,
+        "flag_everybody_cost": 0.7787,
+        "recall": 0.0,
+        "false_alarm_rate": 0.0,
+        "precision": 0.0,
+        "tp": 0,
+        "fp": 0,
+        "tn": 4667,
+        "fn": 1326
+      },
+      "2": {
+        "r": 2.0,
+        "t_star": 0.3333,
+        "cost_per_client": 0.4425,
+        "flag_nobody_cost": 0.4425,
+        "flag_everybody_cost": 0.7787,
+        "recall": 0.0,
+        "false_alarm_rate": 0.0,
+        "precision": 0.0,
+        "tp": 0,
+        "fp": 0,
+        "tn": 4667,
+        "fn": 1326
+      },
+      "3": {
+        "r": 3.0,
+        "t_star": 0.25,
+        "cost_per_client": 0.6638,
+        "flag_nobody_cost": 0.6638,
+        "flag_everybody_cost": 0.7787,
+        "recall": 0.0,
+        "false_alarm_rate": 0.0,
+        "precision": 0.0,
+        "tp": 0,
+        "fp": 0,
+        "tn": 4667,
+        "fn": 1326
+      },
+      "5": {
+        "r": 5.0,
+        "t_star": 0.1667,
+        "cost_per_client": 1.1063,
+        "flag_nobody_cost": 1.1063,
+        "flag_everybody_cost": 0.7787,
+        "recall": 0.0,
+        "false_alarm_rate": 0.0,
+        "precision": 0.0,
+        "tp": 0,
+        "fp": 0,
+        "tn": 4667,
+        "fn": 1326
+      },
+      "10": {
+        "r": 10.0,
+        "t_star": 0.0909,
+        "cost_per_client": 2.2126,
+        "flag_nobody_cost": 2.2126,
+        "flag_everybody_cost": 0.7787,
+        "recall": 0.0,
+        "false_alarm_rate": 0.0,
+        "precision": 0.0,
+        "tp": 0,
+        "fp": 0,
+        "tn": 4667,
+        "fn": 1326
+      }
+    },
+    "reliability_curve": [
+      {
+        "bin": 10,
+        "count": 5993,
+        "mean_predicted": 0.0,
+        "empirical_fraction": 0.2213
+      }
+    ],
+    "bootstrap_ci95": {
+      "pr_auc_ci95": [
+        0.2107,
+        0.2324
+      ],
+      "log_loss_ci95": [
+        7.5959,
+        8.3779
+      ],
+      "brier_ci95": [
+        0.2107,
+        0.2324
+      ],
+      "expected_cost_ci95": [
+        1.0537,
+        1.1622
+      ]
+    }
+  },
+  "plain_logistic": {
+    "pr_auc": 0.5034,
+    "log_loss": 0.4672,
+    "brier_score": 0.1456,
+    "ece_equal_frequency": 0.052,
+    "recall_at_p50": 0.5075,
+    "cost_r5": 0.7022,
+    "cost_sensitivity": {
+      "1": {
+        "r": 1.0,
+        "t_star": 0.5,
+        "cost_per_client": 0.1884,
+        "flag_nobody_cost": 0.2213,
+        "flag_everybody_cost": 0.7787,
+        "recall": 0.2474,
+        "false_alarm_rate": 0.0281,
+        "precision": 0.7146,
+        "tp": 328,
+        "fp": 131,
+        "tn": 4536,
+        "fn": 998
+      },
+      "2": {
+        "r": 2.0,
+        "t_star": 0.3333,
+        "cost_per_client": 0.3215,
+        "flag_nobody_cost": 0.4425,
+        "flag_everybody_cost": 0.7787,
+        "recall": 0.417,
+        "false_alarm_rate": 0.0816,
+        "precision": 0.5921,
+        "tp": 553,
+        "fp": 381,
+        "tn": 4286,
+        "fn": 773
+      },
+      "3": {
+        "r": 3.0,
+        "t_star": 0.25,
+        "cost_per_client": 0.4437,
+        "flag_nobody_cost": 0.6638,
+        "flag_everybody_cost": 0.7787,
+        "recall": 0.546,
+        "false_alarm_rate": 0.1828,
+        "precision": 0.4591,
+        "tp": 724,
+        "fp": 853,
+        "tn": 3814,
+        "fn": 602
+      },
+      "5": {
+        "r": 5.0,
+        "t_star": 0.1667,
+        "cost_per_client": 0.7022,
+        "flag_nobody_cost": 1.1063,
+        "flag_everybody_cost": 0.7787,
+        "recall": 0.7526,
+        "false_alarm_rate": 0.5502,
+        "precision": 0.2799,
+        "tp": 998,
+        "fp": 2568,
+        "tn": 2099,
+        "fn": 328
+      },
+      "10": {
+        "r": 10.0,
+        "t_star": 0.0909,
+        "cost_per_client": 0.8099,
+        "flag_nobody_cost": 2.2126,
+        "flag_everybody_cost": 0.7787,
+        "recall": 0.9178,
+        "false_alarm_rate": 0.8065,
+        "precision": 0.2443,
+        "tp": 1217,
+        "fp": 3764,
+        "tn": 903,
+        "fn": 109
+      }
+    },
+    "reliability_curve": [
+      {
+        "bin": 1,
+        "count": 598,
+        "mean_predicted": 0.0417,
+        "empirical_fraction": 0.112
+      },
+      {
+        "bin": 2,
+        "count": 600,
+        "mean_predicted": 0.0804,
+        "empirical_fraction": 0.1133
+      },
+      {
+        "bin": 3,
+        "count": 596,
+        "mean_predicted": 0.1156,
+        "empirical_fraction": 0.146
+      },
+      {
+        "bin": 4,
+        "count": 602,
+        "mean_predicted": 0.1453,
+        "empirical_fraction": 0.1661
+      },
+      {
+        "bin": 5,
+        "count": 597,
+        "mean_predicted": 0.1803,
+        "empirical_fraction": 0.1089
+      },
+      {
+        "bin": 6,
+        "count": 599,
+        "mean_predicted": 0.2062,
+        "empirical_fraction": 0.1319
+      },
+      {
+        "bin": 7,
+        "count": 602,
+        "mean_predicted": 0.2281,
+        "empirical_fraction": 0.1645
+      },
+      {
+        "bin": 8,
+        "count": 600,
+        "mean_predicted": 0.2559,
+        "empirical_fraction": 0.2133
+      },
+      {
+        "bin": 9,
+        "count": 599,
+        "mean_predicted": 0.358,
+        "empirical_fraction": 0.3723
+      },
+      {
+        "bin": 10,
+        "count": 600,
+        "mean_predicted": 0.5842,
+        "empirical_fraction": 0.6833
+      }
+    ],
+    "bootstrap_ci95": {
+      "pr_auc_ci95": [
+        0.475,
+        0.5334
+      ],
+      "log_loss_ci95": [
+        0.451,
+        0.4824
+      ],
+      "brier_ci95": [
+        0.1397,
+        0.1515
+      ],
+      "expected_cost_ci95": [
+        0.6739,
+        0.7297
+      ]
+    }
+  },
+  "ridge_logistic": {
+    "pr_auc": 0.5034,
+    "log_loss": 0.4671,
+    "brier_score": 0.1456,
+    "ece_equal_frequency": 0.0514,
+    "recall_at_p50": 0.5075,
+    "cost_r5": 0.6993,
+    "cost_sensitivity": {
+      "1": {
+        "r": 1.0,
+        "t_star": 0.5,
+        "cost_per_client": 0.1882,
+        "flag_nobody_cost": 0.2213,
+        "flag_everybody_cost": 0.7787,
+        "recall": 0.2466,
+        "false_alarm_rate": 0.0276,
+        "precision": 0.7171,
+        "tp": 327,
+        "fp": 129,
+        "tn": 4538,
+        "fn": 999
+      },
+      "2": {
+        "r": 2.0,
+        "t_star": 0.3333,
+        "cost_per_client": 0.3215,
+        "flag_nobody_cost": 0.4425,
+        "flag_everybody_cost": 0.7787,
+        "recall": 0.417,
+        "false_alarm_rate": 0.0816,
+        "precision": 0.5921,
+        "tp": 553,
+        "fp": 381,
+        "tn": 4286,
+        "fn": 773
+      },
+      "3": {
+        "r": 3.0,
+        "t_star": 0.25,
+        "cost_per_client": 0.443,
+        "flag_nobody_cost": 0.6638,
+        "flag_everybody_cost": 0.7787,
+        "recall": 0.5445,
+        "false_alarm_rate": 0.1806,
+        "precision": 0.4613,
+        "tp": 722,
+        "fp": 843,
+        "tn": 3824,
+        "fn": 604
+      },
+      "5": {
+        "r": 5.0,
+        "t_star": 0.1667,
+        "cost_per_client": 0.6993,
+        "flag_nobody_cost": 1.1063,
+        "flag_everybody_cost": 0.7787,
+        "recall": 0.7549,
+        "false_alarm_rate": 0.5498,
+        "precision": 0.2806,
+        "tp": 1001,
+        "fp": 2566,
+        "tn": 2101,
+        "fn": 325
+      },
+      "10": {
+        "r": 10.0,
+        "t_star": 0.0909,
+        "cost_per_client": 0.8084,
+        "flag_nobody_cost": 2.2126,
+        "flag_everybody_cost": 0.7787,
+        "recall": 0.9193,
+        "false_alarm_rate": 0.8089,
+        "precision": 0.2441,
+        "tp": 1219,
+        "fp": 3775,
+        "tn": 892,
+        "fn": 107
+      }
+    },
+    "reliability_curve": [
+      {
+        "bin": 1,
+        "count": 598,
+        "mean_predicted": 0.0427,
+        "empirical_fraction": 0.1104
+      },
+      {
+        "bin": 2,
+        "count": 600,
+        "mean_predicted": 0.0814,
+        "empirical_fraction": 0.12
+      },
+      {
+        "bin": 3,
+        "count": 598,
+        "mean_predicted": 0.1162,
+        "empirical_fraction": 0.1455
+      },
+      {
+        "bin": 4,
+        "count": 601,
+        "mean_predicted": 0.1458,
+        "empirical_fraction": 0.1597
+      },
+      {
+        "bin": 5,
+        "count": 599,
+        "mean_predicted": 0.1806,
+        "empirical_fraction": 0.1135
+      },
+      {
+        "bin": 6,
+        "count": 597,
+        "mean_predicted": 0.2061,
+        "empirical_fraction": 0.1307
+      },
+      {
+        "bin": 7,
+        "count": 601,
+        "mean_predicted": 0.2277,
+        "empirical_fraction": 0.1581
+      },
+      {
+        "bin": 8,
+        "count": 600,
+        "mean_predicted": 0.255,
+        "empirical_fraction": 0.2183
+      },
+      {
+        "bin": 9,
+        "count": 599,
+        "mean_predicted": 0.3569,
+        "empirical_fraction": 0.3723
+      },
+      {
+        "bin": 10,
+        "count": 600,
+        "mean_predicted": 0.583,
+        "empirical_fraction": 0.6833
+      }
+    ],
+    "bootstrap_ci95": {
+      "pr_auc_ci95": [
+        0.4751,
+        0.5335
+      ],
+      "log_loss_ci95": [
+        0.4512,
+        0.4822
+      ],
+      "brier_ci95": [
+        0.1397,
+        0.1515
+      ],
+      "expected_cost_ci95": [
+        0.6713,
+        0.7268
+      ]
+    }
+  },
+  "lasso_logistic": {
+    "pr_auc": 0.5035,
+    "log_loss": 0.4671,
+    "brier_score": 0.1456,
+    "ece_equal_frequency": 0.0518,
+    "recall_at_p50": 0.5083,
+    "cost_r5": 0.6998,
+    "cost_sensitivity": {
+      "1": {
+        "r": 1.0,
+        "t_star": 0.5,
+        "cost_per_client": 0.1886,
+        "flag_nobody_cost": 0.2213,
+        "flag_everybody_cost": 0.7787,
+        "recall": 0.2466,
+        "false_alarm_rate": 0.0281,
+        "precision": 0.714,
+        "tp": 327,
+        "fp": 131,
+        "tn": 4536,
+        "fn": 999
+      },
+      "2": {
+        "r": 2.0,
+        "t_star": 0.3333,
+        "cost_per_client": 0.3217,
+        "flag_nobody_cost": 0.4425,
+        "flag_everybody_cost": 0.7787,
+        "recall": 0.4163,
+        "false_alarm_rate": 0.0814,
+        "precision": 0.5923,
+        "tp": 552,
+        "fp": 380,
+        "tn": 4287,
+        "fn": 774
+      },
+      "3": {
+        "r": 3.0,
+        "t_star": 0.25,
+        "cost_per_client": 0.4434,
+        "flag_nobody_cost": 0.6638,
+        "flag_everybody_cost": 0.7787,
+        "recall": 0.5452,
+        "false_alarm_rate": 0.1817,
+        "precision": 0.4602,
+        "tp": 723,
+        "fp": 848,
+        "tn": 3819,
+        "fn": 603
+      },
+      "5": {
+        "r": 5.0,
+        "t_star": 0.1667,
+        "cost_per_client": 0.6998,
+        "flag_nobody_cost": 1.1063,
+        "flag_everybody_cost": 0.7787,
+        "recall": 0.7541,
+        "false_alarm_rate": 0.5494,
+        "precision": 0.2806,
+        "tp": 1000,
+        "fp": 2564,
+        "tn": 2103,
+        "fn": 326
+      },
+      "10": {
+        "r": 10.0,
+        "t_star": 0.0909,
+        "cost_per_client": 0.8069,
+        "flag_nobody_cost": 2.2126,
+        "flag_everybody_cost": 0.7787,
+        "recall": 0.9193,
+        "false_alarm_rate": 0.8069,
+        "precision": 0.2445,
+        "tp": 1219,
+        "fp": 3766,
+        "tn": 901,
+        "fn": 107
+      }
+    },
+    "reliability_curve": [
+      {
+        "bin": 1,
+        "count": 599,
+        "mean_predicted": 0.042,
+        "empirical_fraction": 0.1085
+      },
+      {
+        "bin": 2,
+        "count": 599,
+        "mean_predicted": 0.0808,
+        "empirical_fraction": 0.1202
+      },
+      {
+        "bin": 3,
+        "count": 597,
+        "mean_predicted": 0.1158,
+        "empirical_fraction": 0.1441
+      },
+      {
+        "bin": 4,
+        "count": 602,
+        "mean_predicted": 0.1455,
+        "empirical_fraction": 0.1645
+      },
+      {
+        "bin": 5,
+        "count": 596,
+        "mean_predicted": 0.1805,
+        "empirical_fraction": 0.1107
+      },
+      {
+        "bin": 6,
+        "count": 598,
+        "mean_predicted": 0.206,
+        "empirical_fraction": 0.1288
+      },
+      {
+        "bin": 7,
+        "count": 604,
+        "mean_predicted": 0.2279,
+        "empirical_fraction": 0.1639
+      },
+      {
+        "bin": 8,
+        "count": 599,
+        "mean_predicted": 0.2555,
+        "empirical_fraction": 0.2154
+      },
+      {
+        "bin": 9,
+        "count": 599,
+        "mean_predicted": 0.3576,
+        "empirical_fraction": 0.3706
+      },
+      {
+        "bin": 10,
+        "count": 600,
+        "mean_predicted": 0.5838,
+        "empirical_fraction": 0.685
+      }
+    ],
+    "bootstrap_ci95": {
+      "pr_auc_ci95": [
+        0.4751,
+        0.5336
+      ],
+      "log_loss_ci95": [
+        0.4511,
+        0.4822
+      ],
+      "brier_ci95": [
+        0.1397,
+        0.1515
+      ],
+      "expected_cost_ci95": [
+        0.6721,
+        0.7275
+      ]
+    }
+  },
+  "elastic_net": {
+    "pr_auc": 0.5037,
+    "log_loss": 0.467,
+    "brier_score": 0.1456,
+    "ece_equal_frequency": 0.0516,
+    "recall_at_p50": 0.509,
+    "cost_r5": 0.698,
+    "cost_sensitivity": {
+      "1": {
+        "r": 1.0,
+        "t_star": 0.5,
+        "cost_per_client": 0.1887,
+        "flag_nobody_cost": 0.2213,
+        "flag_everybody_cost": 0.7787,
+        "recall": 0.2443,
+        "false_alarm_rate": 0.0276,
+        "precision": 0.7152,
+        "tp": 324,
+        "fp": 129,
+        "tn": 4538,
+        "fn": 1002
+      },
+      "2": {
+        "r": 2.0,
+        "t_star": 0.3333,
+        "cost_per_client": 0.322,
+        "flag_nobody_cost": 0.4425,
+        "flag_everybody_cost": 0.7787,
+        "recall": 0.4155,
+        "false_alarm_rate": 0.0814,
+        "precision": 0.5918,
+        "tp": 551,
+        "fp": 380,
+        "tn": 4287,
+        "fn": 775
+      },
+      "3": {
+        "r": 3.0,
+        "t_star": 0.25,
+        "cost_per_client": 0.4422,
+        "flag_nobody_cost": 0.6638,
+        "flag_everybody_cost": 0.7787,
+        "recall": 0.5415,
+        "false_alarm_rate": 0.177,
+        "precision": 0.465,
+        "tp": 718,
+        "fp": 826,
+        "tn": 3841,
+        "fn": 608
+      },
+      "5": {
+        "r": 5.0,
+        "t_star": 0.1667,
+        "cost_per_client": 0.698,
+        "flag_nobody_cost": 1.1063,
+        "flag_everybody_cost": 0.7787,
+        "recall": 0.7572,
+        "false_alarm_rate": 0.5513,
+        "precision": 0.2807,
+        "tp": 1004,
+        "fp": 2573,
+        "tn": 2094,
+        "fn": 322
+      },
+      "10": {
+        "r": 10.0,
+        "t_star": 0.0909,
+        "cost_per_client": 0.8083,
+        "flag_nobody_cost": 2.2126,
+        "flag_everybody_cost": 0.7787,
+        "recall": 0.9208,
+        "false_alarm_rate": 0.8129,
+        "precision": 0.2435,
+        "tp": 1221,
+        "fp": 3794,
+        "tn": 873,
+        "fn": 105
+      }
+    },
+    "reliability_curve": [
+      {
+        "bin": 1,
+        "count": 597,
+        "mean_predicted": 0.0432,
+        "empirical_fraction": 0.1106
+      },
+      {
+        "bin": 2,
+        "count": 600,
+        "mean_predicted": 0.0821,
+        "empirical_fraction": 0.125
+      },
+      {
+        "bin": 3,
+        "count": 601,
+        "mean_predicted": 0.1164,
+        "empirical_fraction": 0.1381
+      },
+      {
+        "bin": 4,
+        "count": 599,
+        "mean_predicted": 0.1464,
+        "empirical_fraction": 0.1603
+      },
+      {
+        "bin": 5,
+        "count": 599,
+        "mean_predicted": 0.181,
+        "empirical_fraction": 0.1119
+      },
+      {
+        "bin": 6,
+        "count": 598,
+        "mean_predicted": 0.206,
+        "empirical_fraction": 0.1304
+      },
+      {
+        "bin": 7,
+        "count": 601,
+        "mean_predicted": 0.2273,
+        "empirical_fraction": 0.1581
+      },
+      {
+        "bin": 8,
+        "count": 599,
+        "mean_predicted": 0.2543,
+        "empirical_fraction": 0.2187
+      },
+      {
+        "bin": 9,
+        "count": 599,
+        "mean_predicted": 0.3564,
+        "empirical_fraction": 0.3756
+      },
+      {
+        "bin": 10,
+        "count": 600,
+        "mean_predicted": 0.5823,
+        "empirical_fraction": 0.6833
+      }
+    ],
+    "bootstrap_ci95": {
+      "pr_auc_ci95": [
+        0.4753,
+        0.5339
+      ],
+      "log_loss_ci95": [
+        0.451,
+        0.4819
+      ],
+      "brier_ci95": [
+        0.1397,
+        0.1515
+      ],
+      "expected_cost_ci95": [
+        0.6701,
+        0.7247
+      ]
+    }
+  },
+  "rbf_svm": {
+    "pr_auc": 0.4934,
+    "log_loss": 0.4614,
+    "brier_score": 0.1441,
+    "ece_equal_frequency": 0.0295,
+    "recall_at_p50": 0.4532,
+    "cost_r5": 0.6888,
+    "cost_sensitivity": {
+      "1": {
+        "r": 1.0,
+        "t_star": 0.5,
+        "cost_per_client": 0.1829,
+        "flag_nobody_cost": 0.2213,
+        "flag_everybody_cost": 0.7787,
+        "recall": 0.3054,
+        "false_alarm_rate": 0.0375,
+        "precision": 0.6983,
+        "tp": 405,
+        "fp": 175,
+        "tn": 4492,
+        "fn": 921
+      },
+      "2": {
+        "r": 2.0,
+        "t_star": 0.3333,
+        "cost_per_client": 0.3225,
+        "flag_nobody_cost": 0.4425,
+        "flag_everybody_cost": 0.7787,
+        "recall": 0.3627,
+        "false_alarm_rate": 0.0521,
+        "precision": 0.6644,
+        "tp": 481,
+        "fp": 243,
+        "tn": 4424,
+        "fn": 845
+      },
+      "3": {
+        "r": 3.0,
+        "t_star": 0.25,
+        "cost_per_client": 0.4575,
+        "flag_nobody_cost": 0.6638,
+        "flag_everybody_cost": 0.7787,
+        "recall": 0.3861,
+        "false_alarm_rate": 0.0643,
+        "precision": 0.6305,
+        "tp": 512,
+        "fp": 300,
+        "tn": 4367,
+        "fn": 814
+      },
+      "5": {
+        "r": 5.0,
+        "t_star": 0.1667,
+        "cost_per_client": 0.6888,
+        "flag_nobody_cost": 1.1063,
+        "flag_everybody_cost": 0.7787,
+        "recall": 0.4827,
+        "false_alarm_rate": 0.1496,
+        "precision": 0.4783,
+        "tp": 640,
+        "fp": 698,
+        "tn": 3969,
+        "fn": 686
+      },
+      "10": {
+        "r": 10.0,
+        "t_star": 0.0909,
+        "cost_per_client": 0.7861,
+        "flag_nobody_cost": 2.2126,
+        "flag_everybody_cost": 0.7787,
+        "recall": 0.9955,
+        "false_alarm_rate": 0.9966,
+        "precision": 0.2211,
+        "tp": 1320,
+        "fp": 4651,
+        "tn": 16,
+        "fn": 6
+      }
+    },
+    "reliability_curve": [
+      {
+        "bin": 1,
+        "count": 595,
+        "mean_predicted": 0.1305,
+        "empirical_fraction": 0.158
+      },
+      {
+        "bin": 2,
+        "count": 602,
+        "mean_predicted": 0.146,
+        "empirical_fraction": 0.1246
+      },
+      {
+        "bin": 3,
+        "count": 582,
+        "mean_predicted": 0.1504,
+        "empirical_fraction": 0.1375
+      },
+      {
+        "bin": 4,
+        "count": 600,
+        "mean_predicted": 0.1528,
+        "empirical_fraction": 0.1167
+      },
+      {
+        "bin": 5,
+        "count": 601,
+        "mean_predicted": 0.1542,
+        "empirical_fraction": 0.1248
+      },
+      {
+        "bin": 6,
+        "count": 598,
+        "mean_predicted": 0.155,
+        "empirical_fraction": 0.1438
+      },
+      {
+        "bin": 7,
+        "count": 617,
+        "mean_predicted": 0.1561,
+        "empirical_fraction": 0.1783
+      },
+      {
+        "bin": 8,
+        "count": 599,
+        "mean_predicted": 0.163,
+        "empirical_fraction": 0.227
+      },
+      {
+        "bin": 9,
+        "count": 599,
+        "mean_predicted": 0.2557,
+        "empirical_fraction": 0.3072
+      },
+      {
+        "bin": 10,
+        "count": 600,
+        "mean_predicted": 0.7121,
+        "empirical_fraction": 0.6933
+      }
+    ],
+    "bootstrap_ci95": {
+      "pr_auc_ci95": [
+        0.465,
+        0.5235
+      ],
+      "log_loss_ci95": [
+        0.4454,
+        0.4769
+      ],
+      "brier_ci95": [
+        0.1376,
+        0.1504
+      ],
+      "expected_cost_ci95": [
+        0.6481,
+        0.7284
+      ]
+    }
+  },
+  "random_forest": {
+    "pr_auc": 0.5505,
+    "log_loss": 0.4346,
+    "brier_score": 0.1363,
+    "ece_equal_frequency": 0.01,
+    "recall_at_p50": 0.5671,
+    "cost_r5": 0.581,
+    "cost_sensitivity": {
+      "1": {
+        "r": 1.0,
+        "t_star": 0.5,
+        "cost_per_client": 0.1824,
+        "flag_nobody_cost": 0.2213,
+        "flag_everybody_cost": 0.7787,
+        "recall": 0.3537,
+        "false_alarm_rate": 0.0506,
+        "precision": 0.6652,
+        "tp": 469,
+        "fp": 236,
+        "tn": 4431,
+        "fn": 857
+      },
+      "2": {
+        "r": 2.0,
+        "t_star": 0.3333,
+        "cost_per_client": 0.3064,
+        "flag_nobody_cost": 0.4425,
+        "flag_everybody_cost": 0.7787,
+        "recall": 0.4925,
+        "false_alarm_rate": 0.105,
+        "precision": 0.5713,
+        "tp": 653,
+        "fp": 490,
+        "tn": 4177,
+        "fn": 673
+      },
+      "3": {
+        "r": 3.0,
+        "t_star": 0.25,
+        "cost_per_client": 0.412,
+        "flag_nobody_cost": 0.6638,
+        "flag_everybody_cost": 0.7787,
+        "recall": 0.5769,
+        "false_alarm_rate": 0.1684,
+        "precision": 0.4932,
+        "tp": 765,
+        "fp": 786,
+        "tn": 3881,
+        "fn": 561
+      },
+      "5": {
+        "r": 5.0,
+        "t_star": 0.1667,
+        "cost_per_client": 0.581,
+        "flag_nobody_cost": 1.1063,
+        "flag_everybody_cost": 0.7787,
+        "recall": 0.7112,
+        "false_alarm_rate": 0.3358,
+        "precision": 0.3757,
+        "tp": 943,
+        "fp": 1567,
+        "tn": 3100,
+        "fn": 383
+      },
+      "10": {
+        "r": 10.0,
+        "t_star": 0.0909,
+        "cost_per_client": 0.7217,
+        "flag_nobody_cost": 2.2126,
+        "flag_everybody_cost": 0.7787,
+        "recall": 0.9336,
+        "false_alarm_rate": 0.7382,
+        "precision": 0.2644,
+        "tp": 1238,
+        "fp": 3445,
+        "tn": 1222,
+        "fn": 88
+      }
+    },
+    "reliability_curve": [
+      {
+        "bin": 1,
+        "count": 596,
+        "mean_predicted": 0.0636,
+        "empirical_fraction": 0.0453
+      },
+      {
+        "bin": 2,
+        "count": 602,
+        "mean_predicted": 0.0812,
+        "empirical_fraction": 0.0781
+      },
+      {
+        "bin": 3,
+        "count": 600,
+        "mean_predicted": 0.0966,
+        "empirical_fraction": 0.1067
+      },
+      {
+        "bin": 4,
+        "count": 598,
+        "mean_predicted": 0.1166,
+        "empirical_fraction": 0.1254
+      },
+      {
+        "bin": 5,
+        "count": 597,
+        "mean_predicted": 0.1366,
+        "empirical_fraction": 0.1457
+      },
+      {
+        "bin": 6,
+        "count": 603,
+        "mean_predicted": 0.1585,
+        "empirical_fraction": 0.1642
+      },
+      {
+        "bin": 7,
+        "count": 599,
+        "mean_predicted": 0.1922,
+        "empirical_fraction": 0.1753
+      },
+      {
+        "bin": 8,
+        "count": 599,
+        "mean_predicted": 0.2617,
+        "empirical_fraction": 0.2521
+      },
+      {
+        "bin": 9,
+        "count": 599,
+        "mean_predicted": 0.4185,
+        "empirical_fraction": 0.4274
+      },
+      {
+        "bin": 10,
+        "count": 600,
+        "mean_predicted": 0.6818,
+        "empirical_fraction": 0.6917
+      }
+    ],
+    "bootstrap_ci95": {
+      "pr_auc_ci95": [
+        0.5242,
+        0.5804
+      ],
+      "log_loss_ci95": [
+        0.4192,
+        0.4485
+      ],
+      "brier_ci95": [
+        0.1304,
+        0.1419
+      ],
+      "expected_cost_ci95": [
+        0.5501,
+        0.6134
+      ]
+    }
+  },
+  "hist_gradient_boosting": {
+    "pr_auc": 0.5548,
+    "log_loss": 0.4328,
+    "brier_score": 0.136,
+    "ece_equal_frequency": 0.0114,
+    "recall_at_p50": 0.5566,
+    "cost_r5": 0.5648,
+    "cost_sensitivity": {
+      "1": {
+        "r": 1.0,
+        "t_star": 0.5,
+        "cost_per_client": 0.1817,
+        "flag_nobody_cost": 0.2213,
+        "flag_everybody_cost": 0.7787,
+        "recall": 0.3605,
+        "false_alarm_rate": 0.0516,
+        "precision": 0.6648,
+        "tp": 478,
+        "fp": 241,
+        "tn": 4426,
+        "fn": 848
+      },
+      "2": {
+        "r": 2.0,
+        "t_star": 0.3333,
+        "cost_per_client": 0.3089,
+        "flag_nobody_cost": 0.4425,
+        "flag_everybody_cost": 0.7787,
+        "recall": 0.5128,
+        "false_alarm_rate": 0.1198,
+        "precision": 0.5488,
+        "tp": 680,
+        "fp": 559,
+        "tn": 4108,
+        "fn": 646
+      },
+      "3": {
+        "r": 3.0,
+        "t_star": 0.25,
+        "cost_per_client": 0.415,
+        "flag_nobody_cost": 0.6638,
+        "flag_everybody_cost": 0.7787,
+        "recall": 0.586,
+        "false_alarm_rate": 0.18,
+        "precision": 0.4805,
+        "tp": 777,
+        "fp": 840,
+        "tn": 3827,
+        "fn": 549
+      },
+      "5": {
+        "r": 5.0,
+        "t_star": 0.1667,
+        "cost_per_client": 0.5648,
+        "flag_nobody_cost": 1.1063,
+        "flag_everybody_cost": 0.7787,
+        "recall": 0.7225,
+        "false_alarm_rate": 0.331,
+        "precision": 0.3827,
+        "tp": 958,
+        "fp": 1545,
+        "tn": 3122,
+        "fn": 368
+      },
+      "10": {
+        "r": 10.0,
+        "t_star": 0.0909,
+        "cost_per_client": 0.717,
+        "flag_nobody_cost": 2.2126,
+        "flag_everybody_cost": 0.7787,
+        "recall": 0.9201,
+        "false_alarm_rate": 0.6936,
+        "precision": 0.2737,
+        "tp": 1220,
+        "fp": 3237,
+        "tn": 1430,
+        "fn": 106
+      }
+    },
+    "reliability_curve": [
+      {
+        "bin": 1,
+        "count": 596,
+        "mean_predicted": 0.0482,
+        "empirical_fraction": 0.0419
+      },
+      {
+        "bin": 2,
+        "count": 599,
+        "mean_predicted": 0.0711,
+        "empirical_fraction": 0.0801
+      },
+      {
+        "bin": 3,
+        "count": 602,
+        "mean_predicted": 0.0896,
+        "empirical_fraction": 0.1013
+      },
+      {
+        "bin": 4,
+        "count": 600,
+        "mean_predicted": 0.1079,
+        "empirical_fraction": 0.1033
+      },
+      {
+        "bin": 5,
+        "count": 598,
+        "mean_predicted": 0.1311,
+        "empirical_fraction": 0.1371
+      },
+      {
+        "bin": 6,
+        "count": 601,
+        "mean_predicted": 0.1569,
+        "empirical_fraction": 0.1847
+      },
+      {
+        "bin": 7,
+        "count": 599,
+        "mean_predicted": 0.199,
+        "empirical_fraction": 0.2037
+      },
+      {
+        "bin": 8,
+        "count": 596,
+        "mean_predicted": 0.2747,
+        "empirical_fraction": 0.2466
+      },
+      {
+        "bin": 9,
+        "count": 601,
+        "mean_predicted": 0.4302,
+        "empirical_fraction": 0.416
+      },
+      {
+        "bin": 10,
+        "count": 601,
+        "mean_predicted": 0.6974,
+        "empirical_fraction": 0.6955
+      }
+    ],
+    "bootstrap_ci95": {
+      "pr_auc_ci95": [
+        0.5283,
+        0.5831
+      ],
+      "log_loss_ci95": [
+        0.417,
+        0.4471
+      ],
+      "brier_ci95": [
+        0.1301,
+        0.1416
+      ],
+      "expected_cost_ci95": [
+        0.5343,
+        0.594
+      ]
+    }
+  },
+  "paired_difference_test": {
+    "comparison": "hist_gradient_boosting vs plain_logistic",
+    "delta_metrics": {
+      "delta_pr_auc_ci95": [
+        0.0353,
+        0.0685
+      ],
+      "delta_cost_ci95": [
+        -0.1699,
+        -0.1065
+      ]
+    }
+  }
+}
