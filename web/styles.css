@@ -185,6 +185,14 @@ body {
   border-radius: 4px;
 }
 
+.callout-box {
+  background: #eff6ff;
+  border-left: 4px solid var(--primary);
+  padding: 1.25rem;
+  border-radius: 6px;
+  margin-bottom: 1.25rem;
+}
+
 /* Grids */
 .grid-2 {
   display: grid;

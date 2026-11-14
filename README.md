@@ -84,6 +84,17 @@ The project includes a static, zero-backend interactive web application hosted o
 
 ---
 
+## Data Access Instructions & Provenance
+
+* **Dataset:** Default of Credit Card Clients Dataset
+* **Source:** UCI Machine Learning Repository (Yeh and Lien, 2009)
+* **Direct Access URL:** [https://archive.ics.uci.edu/dataset/350/default+of+credit+card+clients](https://archive.ics.uci.edu/dataset/350/default+of+credit+card+clients)
+* **License:** Creative Commons Attribution 4.0 International (CC BY 4.0)
+* **Automated Retrieval:** Running `python run_all.py` or `python src/data_loader.py` automatically checks for `data/raw/default of credit card clients.xls` and downloads/unpacks it if not present.
+* **Unit of Observation:** Each row represents one individual credit card client at a Taiwanese commercial bank between April 2005 and September 2005, predicting whether they defaulted on their payment in October 2005.
+
+---
+
 ## How to Reproduce
 
 ### 1. Clone the repository
