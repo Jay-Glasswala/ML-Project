@@ -44,12 +44,19 @@ def main():
         sys.exit(1)
     print("All tests passed cleanly!")
 
-    # Step 3: Model Training & CV Tuning
-    print("\n[Step 3/6] Running Model Training & 5-Fold CV Tuning (src/train_models.py)...")
+    # Step 3: Model Training – optionally skip CV
+    print("\n[Step 3/6] Running Model Training")
     from src.pipelines import prepare_dataset_splits
-    from src.train_models import run_cv_tuning, save_training_artifacts
+    from src.train_models import run_cv_tuning, save_training_artifacts, get_default_models
     X_train, y_train, X_test, y_test, _, _ = prepare_dataset_splits(train_df, test_df)
-    models, tuning_res = run_cv_tuning(X_train, y_train)
+
+    if os.getenv('SKIP_CV') == '1':
+        print('Skipping CV tuning (SKIP_CV=1); using default models.')
+        models = get_default_models(X_train, y_train)
+        tuning_res = {}
+    else:
+        models, tuning_res = run_cv_tuning(X_train, y_train)
+
     save_training_artifacts(models, tuning_res, X_train, y_train, X_test, y_test, processed_dir)
 
     # Step 4: Model Evaluation
