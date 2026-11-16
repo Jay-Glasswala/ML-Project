@@ -703,16 +703,19 @@ python -m http.server 8000</code></pre>
       <div class="grid-2" style="margin-top: 1rem;">
         <div>
           <h4>Team Contribution Statement</h4>
-          <p><strong>Jay R. Glasswala (25110147) &bull; ~60% (Project Lead & Core ML):</strong> Overall project direction, non-linear margin & ensemble modeling (Random Forest, HistGradientBoosting, RBF-SVM with Platt scaling), 5-fold cross-validation tuning, probability calibration & equal-frequency quantile ECE implementation, Bayes cost threshold optimization ($t^* = \frac{1}{1+r}$) and cost bowl analysis, paired bootstrap hypothesis testing, and GitHub Pages deployment.</p>
-          <p><strong>Anant Shukla (25110030) &bull; ~40% (Data Engineering & Auditing):</strong> Data loading & deduplication (finding 35 duplicate records), categorical recoding, scikit-learn `Pipeline` leakage prevention, collinearity & VIF analysis, Ridge vs. Lasso regularizer stability, subgroup demographic fairness auditing, and automated pytest test suite.</p>
+          <p><strong>Jay R. Glasswala (25110147):</strong> Non-linear margin & ensemble modeling (Random Forest, HistGradientBoosting, RBF-SVM with Platt scaling), 5-fold cross-validation tuning, probability calibration & equal-frequency quantile ECE implementation, Bayes cost threshold optimization ($t^* = \frac{1}{1+r}$), paired bootstrap hypothesis testing, and GitHub Pages deployment.</p>
+          <p><strong>Anant Shukla (25110030):</strong> Data ingestion pipeline, duplicate identification (35 duplicate rows), categorical recoding, scikit-learn `Pipeline` leakage prevention, collinearity & VIF analysis, Ridge vs. Lasso regularizer stability, subgroup demographic fairness auditing, and automated pytest test suite.</p>
         </div>
         <div>
           <h4>Responsible AI Disclosure & Citations</h4>
           <p>
-            <strong>Website Frontend Development (AI-Assisted):</strong> Because this course evaluates machine learning reasoning and statistical modeling rather than web development skills, generative AI tools (Anthropic Claude, Google Gemini, OpenAI ChatGPT) were used to build the static web presentation (HTML layout, CSS styling, Chart.js integrations, and DOM event scaffolding for the interactive simulator).
+            <strong>Website Frontend & UI:</strong> Generative AI tools (Claude, Gemini, ChatGPT) assisted in building the static web presentation (HTML layout, CSS styling, Chart.js integrations, and DOM event scaffolding for the interactive simulator), as the course focuses on evaluating machine learning understanding and reasoning rather than web development skills.
           </p>
           <p class="text-sm" style="margin-top: 0.5rem;">
-            <strong>Core ML Ownership:</strong> All core machine learning work—problem formulation, mathematical derivations ($t^* = \frac{1}{1+r}$), data curation decisions, model training, quantile ECE calibration, bootstrap hypothesis tests, and conclusions—was formulated, executed, and validated by the students (Jay Glasswala & Anant Shukla).
+            <strong>ML Coding Assistance:</strong> AI was also used for programming assistance on standard ML tasks, such as suggesting sensible hyperparameter search ranges during cross-validation, boilerplate for Scikit-Learn pipelines, vectorization in bootstrap loops, and debugging model convergence warnings.
+          </p>
+          <p class="text-sm" style="margin-top: 0.5rem;">
+            <strong>Core ML Ownership:</strong> All core ML decisions—problem formulation, mathematical derivations ($t^* = \frac{1}{1+r}$), data curation decisions, model comparisons, quantile ECE calibration, bootstrap hypothesis tests, and conclusions—were independently formulated, executed, and validated by the students (Jay Glasswala & Anant Shukla).
           </p>
           <p class="text-sm text-muted" style="margin-top: 0.5rem;">
             <strong>Citation:</strong> Yeh, I. C., & Lien, C. H. (2009). The comparisons of data mining techniques for the predictive accuracy of probability of default of credit card clients. <em>Expert Systems with Applications</em>, 36(2), 2473-2480.

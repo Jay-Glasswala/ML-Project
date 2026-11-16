@@ -22,14 +22,14 @@ When missing a defaulter is $5\times$ more costly than a false alarm ($r = 5$), 
 
 ---
 
-## Team Members & Work Distribution
+## Team Members & Responsibilities
 
-| Student Name | Roll Number | Work Share | Primary Core Responsibilities |
-| :--- | :---: | :---: | :--- |
-| **Jay R. Glasswala** | `25110147` | **~60% (Project Lead & Core ML)** | Overall project direction and problem formulation; non-linear margin & ensemble modeling (Random Forest, HistGradientBoosting, RBF-SVM with Platt scaling); 5-fold cross-validation hyperparameter tuning; probability calibration & equal-frequency quantile ECE implementation; Bayes cost threshold optimization ($t^* = \frac{1}{1+r}$) and cost bowl analysis; 1,000-resample paired bootstrap hypothesis testing; interactive web application architecture and GitHub Pages deployment. |
-| **Anant Shukla** | `25110030` | **~40% (Data Engineering & Auditing)** | Data ingestion pipeline, duplicate identification (35 rows) and categorical recoding; dataset schema verification and `Pipeline` data-leakage prevention; multicollinearity analysis and VIF calculation; Ridge ($L_2$) vs. Lasso ($L_1$) regularizer dynamics; subgroup demographic fairness auditing across protected attributes; automated `pytest` test suite. |
+| Student Name | Roll Number | Primary Core Responsibilities |
+| :--- | :---: | :--- |
+| **Jay R. Glasswala** | `25110147` | Non-linear margin & ensemble modeling (Random Forest, HistGradientBoosting, RBF-SVM with Platt scaling), 5-fold cross-validation tuning, probability calibration & equal-frequency quantile ECE implementation, Bayes cost threshold optimization ($t^* = \frac{1}{1+r}$), paired bootstrap hypothesis testing, and GitHub Pages deployment. |
+| **Anant Shukla** | `25110030` | Data ingestion pipeline, duplicate identification (35 rows) and categorical recoding, scikit-learn `Pipeline` leakage prevention, collinearity & VIF analysis, Ridge vs. Lasso regularizer stability, subgroup demographic fairness auditing, and automated `pytest` test suite. |
 
-*Both team members reviewed all code and can reproduce and defend every result end-to-end.*
+*Both team members contributed equally to project discussions, reviewed all code, and can reproduce and defend every result end-to-end.*
 
 ---
 
@@ -130,7 +130,7 @@ python -m http.server 8000
 ## Responsible AI Disclosure
 
 In accordance with course academic integrity guidelines:
-* **Website Frontend Development (AI-Assisted):** Because ES 335 evaluates machine learning reasoning, statistical modeling, and experimental methodology rather than front-end web development skills, generative AI tools (Anthropic Claude, Google Gemini, OpenAI ChatGPT) were utilized to build the static web presentation (HTML layout, CSS styling, Chart.js integrations, and DOM event scaffolding for the interactive simulator).
-* **Syntax & Scaffolding Boilerplate:** AI was also used as a programming assistant for drafting unit test scaffolds, debugging scikit-learn ConvergenceWarnings, and formatting Matplotlib plot aesthetics.
-* **Full Student Ownership of Core ML Reasoning:** All core machine learning work—problem formulation, mathematical derivation of the Bayes optimal decision threshold $t^* = \frac{1}{1+r}$, data cleaning and recoding decisions (detecting the 35 duplicates), feature selection, model tuning, probability calibration (quantile ECE), paired bootstrap hypothesis tests, error analysis, and experimental conclusions—was conceptualized, implemented, validated, and defended exclusively by the project authors (Jay Glasswala and Anant Shukla).
-* **Zero Private Data / Credentials:** No private credentials, API keys, or sensitive data exist in this repository. All data originates from the public UCI Machine Learning Repository.
+* **Website Frontend & Visualization:** Generative AI tools (Claude, Gemini, ChatGPT) were used to assist in building the static web presentation (HTML layout, CSS styling, Chart.js integrations, and event handlers for the interactive cost simulator), as the course focuses on evaluating machine learning understanding and reasoning rather than front-end web development.
+* **Machine Learning Coding Assistance:** AI was utilized for programming assistance on standard ML tasks, including suggesting sensible hyperparameter search ranges during cross-validation, providing syntax boilerplate for Scikit-Learn `ColumnTransformer` pipelines, optimizing NumPy array vectorization for the bootstrap resampling loops, and debugging model convergence warnings.
+* **Independent Verification & Reasoning:** All core ML decisions—problem formulation, mathematical derivation of the Bayes optimal threshold $t^* = \frac{1}{1+r}$, data cleaning logic (detecting the 35 duplicate client rows and recoding undocumented values), model comparisons, quantile ECE implementation, error analysis, and conclusions—were independently conceptualized, executed, verified, and defended by the project team (Jay Glasswala and Anant Shukla).
+* **Zero Private Data / Credentials:** No private credentials, API keys, or proprietary data are present. All artifacts originate from the public UCI Machine Learning Repository.
