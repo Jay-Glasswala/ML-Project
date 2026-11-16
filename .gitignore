@@ -52,3 +52,4 @@ data/processed/*.joblib
 # Operating System Files
 .DS_Store
 Thumbs.db
+*.zip
