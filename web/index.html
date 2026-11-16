@@ -103,7 +103,7 @@
           <h3>Honest Scope & Claim Boundaries</h3>
           <ul class="bullet-list">
             <li><strong>Non-Causal Association:</strong> Predictive markers of delinquency do not prove causation (e.g. higher age does not cause financial solvency).</li>
-            <li><strong>Temporal & Regional Snapshot:</strong> Data comes from a period of heavy credit-card expansion and default stress in Taiwan (2005–2006). Base rates and coefficients may not generalize to other macroeconomic regimes.</li>
+            <li><strong>Temporal & Regional Snapshot:</strong> Data comes from a period of heavy credit-card expansion and default stress in Taiwan (2005-2006). Base rates and coefficients may not generalize to other macroeconomic regimes.</li>
             <li><strong>Delinquency Benchmark, Not Lending Origination:</strong> The model assesses delinquency risk among existing account holders; it is not designed to approve or deny initial credit applications.</li>
             <li><strong>No Fairness by Unawareness:</strong> Excluding protected demographic features (`SEX`, `MARRIAGE`) does not eliminate disparate impact due to structural correlations. We measure outcomes through post-hoc subgroup error auditing.</li>
           </ul>
@@ -209,7 +209,7 @@
         <div class="step-card">
           <h4>1. Standard Scaling of Numeric Features</h4>
           <p>
-            <strong>Why:</strong> Continuous variables have wildly disparate scales (e.g. `LIMIT_BAL` and `BILL_AMT` exceed 500,000 NT dollars, while `AGE` is 20–70 and `PAY` is -2 to 8). 
+            <strong>Why:</strong> Continuous variables have wildly disparate scales (e.g. `LIMIT_BAL` and `BILL_AMT` exceed 500,000 NT dollars, while `AGE` is 20-70 and `PAY` is -2 to 8). 
             Regularized linear models (Ridge, Lasso) and distance-based SVMs are scale-dependent; without scaling, features with large nominal values dominate the regularization penalty.
           </p>
         </div>
@@ -662,7 +662,7 @@
           <h3>Data & Structural Limitations</h3>
           <ul class="bullet-list">
             <li><strong>No Calendar Date Column:</strong> The UCI dataset provides only month offsets (April to September 2005) without calendar timestamps, preventing true temporal walk-forward backtesting.</li>
-            <li><strong>Taiwan Credit Card Crisis Context:</strong> Data coincides with the 2005–2006 Taiwanese cash-card debt crisis. The baseline default rate ($22.13\%$) reflects elevated macro stress and may not represent tranquil credit cycles.</li>
+            <li><strong>Taiwan Credit Card Crisis Context:</strong> Data coincides with the 2005-2006 Taiwanese cash-card debt crisis. The baseline default rate ($22.13\%$) reflects elevated macro stress and may not represent tranquil credit cycles.</li>
             <li><strong>Credit Limit as Endogenous Proxy:</strong> `LIMIT_BAL` reflects past underwriting decisions by Taiwanese lenders, partially capturing bank risk appetite rather than borrower nature.</li>
           </ul>
         </div>
