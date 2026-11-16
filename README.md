@@ -22,12 +22,12 @@ When missing a defaulter is $5\times$ more costly than a false alarm ($r = 5$), 
 
 ---
 
-## Team Members & Responsibilities
+## Team Members & Work Distribution
 
-| Student Name | Roll Number | Primary Core Responsibilities |
-| :--- | :---: | :--- |
-| **Anant Shukla** | `25110030` | Data pipeline engineering, duplicate removal & recoding, schema verification, scikit-learn `Pipeline` leakage prevention, collinearity & VIF analysis, Ridge vs. Lasso regularizer stability, subgroup demographic fairness auditing. |
-| **Jay R. Glasswala** | `25110147` | Non-linear margin & ensemble modeling (Random Forest, HistGradientBoosting, RBF-SVM with Platt scaling), equal-frequency probability calibration (ECE), Bayes cost threshold optimization, paired bootstrap hypothesis testing, and static interactive GitHub Pages deployment. |
+| Student Name | Roll Number | Work Share | Primary Core Responsibilities |
+| :--- | :---: | :---: | :--- |
+| **Jay R. Glasswala** | `25110147` | **~60% (Project Lead & Core ML)** | Overall project direction and problem formulation; non-linear margin & ensemble modeling (Random Forest, HistGradientBoosting, RBF-SVM with Platt scaling); 5-fold cross-validation hyperparameter tuning; probability calibration & equal-frequency quantile ECE implementation; Bayes cost threshold optimization ($t^* = \frac{1}{1+r}$) and cost bowl analysis; 1,000-resample paired bootstrap hypothesis testing; interactive web application architecture and GitHub Pages deployment. |
+| **Anant Shukla** | `25110030` | **~40% (Data Engineering & Auditing)** | Data ingestion pipeline, duplicate identification (35 rows) and categorical recoding; dataset schema verification and `Pipeline` data-leakage prevention; multicollinearity analysis and VIF calculation; Ridge ($L_2$) vs. Lasso ($L_1$) regularizer dynamics; subgroup demographic fairness auditing across protected attributes; automated `pytest` test suite. |
 
 *Both team members reviewed all code and can reproduce and defend every result end-to-end.*
 
@@ -130,6 +130,7 @@ python -m http.server 8000
 ## Responsible AI Disclosure
 
 In accordance with course academic integrity guidelines:
-* **AI Tools Utilized:** Claude (Anthropic), Gemini (Google), and ChatGPT (OpenAI) were used for brainstorming experimental design, writing unit test boilerplate, debugging ConvergenceWarnings, and CSS layout optimization.
-* **Attribution & Independent Verification:** Every mathematical derivation (Bayes decision threshold, ECE quantile formulation), data transformation, and model output was independently executed, checked, and validated via deterministic random seeds (`random_state=42`).
-* **Zero Private Data / Credentials:** No proprietary credentials, API keys, or private identifiers are stored in this repository. All artifacts originate from the public UCI dataset.
+* **Website Frontend Development (AI-Assisted):** Because ES 335 evaluates machine learning reasoning, statistical modeling, and experimental methodology rather than front-end web development skills, generative AI tools (Anthropic Claude, Google Gemini, OpenAI ChatGPT) were utilized to build the static web presentation (HTML layout, CSS styling, Chart.js integrations, and DOM event scaffolding for the interactive simulator).
+* **Syntax & Scaffolding Boilerplate:** AI was also used as a programming assistant for drafting unit test scaffolds, debugging scikit-learn ConvergenceWarnings, and formatting Matplotlib plot aesthetics.
+* **Full Student Ownership of Core ML Reasoning:** All core machine learning work—problem formulation, mathematical derivation of the Bayes optimal decision threshold $t^* = \frac{1}{1+r}$, data cleaning and recoding decisions (detecting the 35 duplicates), feature selection, model tuning, probability calibration (quantile ECE), paired bootstrap hypothesis tests, error analysis, and experimental conclusions—was conceptualized, implemented, validated, and defended exclusively by the project authors (Jay Glasswala and Anant Shukla).
+* **Zero Private Data / Credentials:** No private credentials, API keys, or sensitive data exist in this repository. All data originates from the public UCI Machine Learning Repository.
