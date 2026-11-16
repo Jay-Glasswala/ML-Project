@@ -21,6 +21,11 @@
   padding: 0;
 }
 
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 80px;
+}
+
 body {
   font-family: var(--font-family);
   background-color: var(--light-bg);
@@ -135,6 +140,7 @@ body {
   margin: 2rem 0;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
   position: relative;
+  scroll-margin-top: 80px;
 }
 
 .section-num {
