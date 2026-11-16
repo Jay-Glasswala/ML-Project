@@ -66,8 +66,15 @@ def main():
     # Step 6: Export Web Artifacts
     print("\n[Step 6/6] Exporting Web Artifacts for GitHub Pages (src/export_artifacts.py)...")
     from src.export_artifacts import export_web_artifacts
+    import shutil
     web_dir = os.path.join(project_root, 'web')
+    docs_dir = os.path.join(project_root, 'docs')
     export_web_artifacts(processed_dir, web_dir)
+    # Mirror web to docs for GitHub Pages standard deployment
+    if os.path.exists(docs_dir):
+        shutil.rmtree(docs_dir)
+    shutil.copytree(web_dir, docs_dir)
+    print(f"Mirrored web artifacts to: {docs_dir}")
 
     elapsed = time.time() - start_time
     print("\n" + "=" * 70)
