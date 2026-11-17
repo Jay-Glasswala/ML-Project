@@ -143,4 +143,23 @@ In accordance with course academic integrity guidelines:
 * **Website Frontend & Visualization:** Generative AI tools (Claude, Gemini, ChatGPT) were used to assist in building the static web presentation (HTML layout, CSS styling, Chart.js integrations, and event handlers for the interactive cost simulator), as the course focuses on evaluating machine learning understanding and reasoning rather than front-end web development.
 * **Machine Learning Coding Assistance:** AI was utilized for programming assistance on standard ML tasks, including suggesting sensible hyperparameter search ranges during cross-validation, providing syntax boilerplate for Scikit-Learn `ColumnTransformer` pipelines, optimizing NumPy array vectorization for the bootstrap resampling loops, and debugging model convergence warnings.
 * **Independent Verification & Reasoning:** All core ML decisions—problem formulation, mathematical derivation of the Bayes optimal threshold $t^* = \frac{1}{1+r}$, data cleaning logic (detecting the 35 duplicate client rows and recoding undocumented values), model comparisons, quantile ECE implementation, error analysis, and conclusions—were independently conceptualized, executed, verified, and defended by the project team (Jay Glasswala and Anant Shukla).
+* **Results Audit:** Claude (Anthropic) was used to cross-check the README and website figures against the generated metrics files and the fitted model coefficients; the collinearity discussion and results table were corrected to match the actual outputs.
 * **Zero Private Data / Credentials:** No private credentials, API keys, or proprietary data are present. All artifacts originate from the public UCI Machine Learning Repository.
+
+---
+
+## References
+
+**Data**
+* Yeh, I.-C., & Lien, C.-H. (2009). The comparisons of data mining techniques for the predictive accuracy of probability of default of credit card clients. *Expert Systems with Applications, 36*(2), 2473–2480.
+* Yeh, I.-C. (2009). *Default of Credit Card Clients* [Dataset]. UCI Machine Learning Repository. https://doi.org/10.24432/C55S3H (CC BY 4.0)
+
+**Methods**
+* Platt, J. (1999). Probabilistic outputs for support vector machines and comparisons to regularized likelihood methods. *Advances in Large Margin Classifiers*, 61–74.
+* Elkan, C. (2001). The foundations of cost-sensitive learning. *Proceedings of IJCAI 2001*, 973–978. (Bayes cost-optimal threshold)
+* Zou, H., & Hastie, T. (2005). Regularization and variable selection via the elastic net. *Journal of the Royal Statistical Society: Series B, 67*(2), 301–320.
+
+**Software**
+* Pedregosa, F., et al. (2011). Scikit-learn: Machine learning in Python. *Journal of Machine Learning Research, 12*, 2825–2830.
+* NumPy, pandas, SciPy, Matplotlib and pytest (versions in `requirements.txt`).
+* Chart.js (https://www.chartjs.org, MIT License) and MathJax 3 (https://www.mathjax.org, Apache 2.0) for the website, loaded from the jsDelivr CDN.
