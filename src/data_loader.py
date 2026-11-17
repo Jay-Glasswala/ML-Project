@@ -146,6 +146,40 @@ def compute_vif_and_correlations(train_df, output_dir):
     return collinearity_report
 
 
+def check_bill_values(df):
+    """
+    Looks for extreme or odd money values (we listed this in our proposal).
+    We don't change anything here, we just count them so we can report it:
+    negative bills (overpaid / refunds), bills above the credit limit,
+    clients with no bills at all, and the largest values.
+    """
+    bill_cols = [f'BILL_AMT{i}' for i in range(1, 7)]
+    pay_cols = [f'PAY_AMT{i}' for i in range(1, 7)]
+    bills = df[bill_cols]
+
+    neg = (bills < 0).any(axis=1)
+    over_limit = bills.gt(df['LIMIT_BAL'], axis=0).any(axis=1)
+    way_over = bills.gt(1.5 * df['LIMIT_BAL'], axis=0).any(axis=1)
+    all_zero = (bills == 0).all(axis=1)
+
+    checks = {
+        'rows': int(len(df)),
+        'rows_with_negative_bill': int(neg.sum()),
+        'most_negative_bill': float(bills.min().min()),
+        'default_rate_negative_bill_rows': round(float(df.loc[neg, 'default'].mean()), 3),
+        'rows_with_bill_over_limit': int(over_limit.sum()),
+        'rows_with_bill_over_1.5x_limit': int(way_over.sum()),
+        'default_rate_over_limit_rows': round(float(df.loc[over_limit, 'default'].mean()), 3),
+        'rows_with_all_six_bills_zero': int(all_zero.sum()),
+        'largest_bill': float(bills.max().max()),
+        'largest_payment': float(df[pay_cols].max().max()),
+        'skewness': {c: round(float(df[c].skew()), 1) for c in ['LIMIT_BAL'] + bill_cols + pay_cols},
+    }
+    print(f"[DataLoader] Bill checks: {checks['rows_with_negative_bill']} rows with a negative bill, "
+          f"{checks['rows_with_bill_over_limit']} rows with a bill above the limit")
+    return checks
+
+
 def split_and_save_data(df, audit_info, output_dir=None):
     """
     Splits data into stratified 80/20 train/test sets with random_state=42.
@@ -175,6 +209,9 @@ def split_and_save_data(df, audit_info, output_dir=None):
     audit_info['test_rows'] = len(test_df)
     audit_info['train_default_rate'] = train_rate
     audit_info['test_default_rate'] = test_rate
+
+    # Extreme / odd bill values (only counted and reported, nothing is removed)
+    audit_info['bill_value_checks'] = check_bill_values(df)
 
     # Compute Collinearity & VIF on train_df only
     collinearity_report = compute_vif_and_correlations(train_df, output_dir)

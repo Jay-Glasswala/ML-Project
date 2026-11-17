@@ -459,7 +459,7 @@
       "BILL_AMT2": {
         "mean": 0.244,
         "ci95": [
-          -0.003,
+          -0.002,
           0.57
         ],
         "share_zero": 0.03,
@@ -469,7 +469,7 @@
         "mean": -0.004,
         "ci95": [
           -0.245,
-          0.206
+          0.207
         ],
         "share_zero": 0.12,
         "share_positive": 0.44
@@ -495,8 +495,8 @@
       "BILL_AMT6": {
         "mean": 0.06,
         "ci95": [
-          -0.097,
-          0.271
+          -0.098,
+          0.272
         ],
         "share_zero": 0.05,
         "share_positive": 0.72
@@ -559,5 +559,35 @@
       }
     },
     "n_bootstrap": 100
+  },
+  "log_transform_check": {
+    "ridge_raw": {
+      "cv_log_loss": 0.4659,
+      "cv_log_loss_std": 0.0044,
+      "cv_pr_auc": 0.5036
+    },
+    "ridge_signed_log": {
+      "cv_log_loss": 0.4546,
+      "cv_log_loss_std": 0.0041,
+      "cv_pr_auc": 0.503
+    }
+  },
+  "wider_grid_check": {
+    "n_settings_tried": 20,
+    "our_setting": {
+      "learning_rate": 0.05,
+      "max_iter": 100
+    },
+    "our_cv_log_loss": 0.4265,
+    "our_cv_log_loss_std": 0.0047,
+    "best_random_search_params": {
+      "min_samples_leaf": 50,
+      "max_leaf_nodes": 15,
+      "max_iter": 100,
+      "learning_rate": 0.05,
+      "l2_regularization": 1.0
+    },
+    "best_random_search_cv_log_loss": 0.4261,
+    "best_random_search_cv_log_loss_std": 0.0045
   }
 }

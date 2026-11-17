@@ -63,6 +63,24 @@ Cost is per client, in units of the cost of one false alarm.
 
 Both intervals don't include zero, so the difference is significant.
 
+### What happens for other cost ratios?
+
+We don't really know the true cost ratio, so here are the test-set results for a few values of $r$ (cost per client, in units of one false alarm):
+
+| $r$ | $t^*$ | HGB cost | HGB recall | HGB false alarm rate | RF cost | Ridge cost | Flag nobody | Flag everybody |
+| :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| 1 | 0.500 | 0.182 | 36% | 5% | 0.182 | 0.188 | 0.221 | 0.779 |
+| 2 | 0.333 | 0.309 | 51% | 12% | 0.306 | 0.322 | 0.443 | 0.779 |
+| 3 | 0.250 | 0.415 | 59% | 18% | 0.412 | 0.443 | 0.664 | 0.779 |
+| 5 | 0.167 | 0.565 | 72% | 33% | 0.581 | 0.699 | 1.106 | 0.779 |
+| 10 | 0.091 | 0.717 | 92% | 69% | 0.722 | 0.808 | 2.213 | 0.779 |
+
+* HistGradientBoosting and Random Forest are very close for every $r$ (RF is even slightly cheaper at $r=2$ and $r=3$), so we wouldn't call one clearly better than the other.
+* As $r$ grows, the threshold drops and the model flags more and more people: at $r=10$ it catches 92% of defaulters but also flags 69% of good clients.
+* At $r=10$ the models only just beat "flag everybody" (HGB 0.717 vs. 0.779), and Ridge (0.808) is actually *worse* than flagging everybody. So the model is most useful for moderate cost ratios.
+
+**Did our small tuning grid miss anything?** Our HistGradientBoosting grid only had 4 settings, so we also ran a random search over 20 settings from a much wider grid (learning rate, number of trees, leaf size, L2 penalty). The best one had CV log-loss 0.4261 vs. 0.4265 for ours, which is much smaller than the fold-to-fold spread (std ≈ 0.0047). So the small grid didn't cost us anything noticeable.
+
 ### The six bill columns (collinearity)
 
 The bill amounts for neighbouring months are very similar (correlation up to 0.955), and the VIFs on the training data are high:
@@ -153,6 +171,12 @@ It reads the saved test predictions from `web/data/test_results.json` (about 106
 * **Link:** https://archive.ics.uci.edu/dataset/350/default+of+credit+card+clients
 * **License:** CC BY 4.0
 * **Getting the data:** `python run_all.py` (or `python src/data_loader.py`) looks for `data/raw/default of credit card clients.xls` and downloads it if it isn't there. If the download fails, download the `.xls` from the link above and put it in `data/raw/` yourself.
+* **Odd and extreme values** (`check_bill_values` in `src/data_loader.py`, saved in `summary_metrics.json`). We counted these but didn't remove them, because they look like real account situations rather than errors:
+  * 1,930 clients have at least one negative bill (lowest: -339,603 NT$). A negative bill most likely means the client paid more than they owed. Their default rate is 16.5%, lower than the overall 22.1%.
+  * 3,931 clients had a bill above their credit limit in at least one month (343 were above 1.5× the limit). Their default rate is 30.1%.
+  * 836 clients have no bill in any of the six months.
+  * The money columns are very skewed (skewness about 3 for bills and 11–30 for payments; largest bill 1,664,089 NT$).
+  * Does the skew hurt the linear models? We tried a signed log transform, $\text{sign}(x)\log(1+|x|)$, before Ridge (`src/robustness_checks.py`). CV log-loss improved from 0.4659 to 0.4546, but PR-AUC didn't change (0.504 vs. 0.503). So the log transform makes Ridge's probabilities a bit better but doesn't help it find more defaulters, and Ridge is still well behind the tree models. The tree models aren't affected by this kind of transform at all. We left the main pipeline as it was, but it's something we would add next time.
 * **One row** = one credit card client at a Taiwanese bank. The inputs cover April to September 2005, and the target is whether they defaulted in October 2005.
 
 ---
@@ -189,7 +213,7 @@ As the course rules require, here is how we used AI tools:
 * **Website:** We used AI tools (Claude, Gemini, ChatGPT) to help build the website (HTML layout, CSS, the Chart.js charts and the slider code). The course is about the ML, not web development, so we focused our own effort there.
 * **ML code:** We used AI for help with standard coding tasks: suggesting hyperparameter ranges, `ColumnTransformer` pipeline boilerplate, speeding up the bootstrap loops with NumPy, and fixing convergence warnings.
 * **Our decisions:** The problem setup, the derivation of $t^* = 1/(1+r)$, the data cleaning choices (finding the 35 duplicates, recoding the undocumented codes), the model comparisons, the quantile ECE and the conclusions were our decisions. We checked the results and can explain them.
-* **Results check and extra analysis:** We used Claude (Anthropic) to cross-check the README and website against our output files, to write `src/error_analysis.py` and `src/robustness_checks.py`, and to rewrite the error analysis, calibration and collinearity text from their outputs. It also helped rewrite the README and website in simpler language. We reviewed these results ourselves.
+* **Results check and extra analysis:** We used Claude (Anthropic) to cross-check the README and website against our output files, to write `src/error_analysis.py`, `src/robustness_checks.py` and the `check_bill_values` function in `src/data_loader.py`, and to rewrite the error analysis, calibration and collinearity text from their outputs. It also helped rewrite the README and website in simpler language. We reviewed these results ourselves.
 * **No private data:** There are no passwords, API keys or private data in this repo. All data comes from the public UCI repository.
 
 ---

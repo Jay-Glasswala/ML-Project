@@ -118,5 +118,32 @@
         "PAY_6": 1.0
       }
     }
+  },
+  "bill_value_checks": {
+    "rows": 29965,
+    "rows_with_negative_bill": 1930,
+    "most_negative_bill": -339603.0,
+    "default_rate_negative_bill_rows": 0.165,
+    "rows_with_bill_over_limit": 3931,
+    "rows_with_bill_over_1.5x_limit": 343,
+    "default_rate_over_limit_rows": 0.301,
+    "rows_with_all_six_bills_zero": 836,
+    "largest_bill": 1664089.0,
+    "largest_payment": 1684259.0,
+    "skewness": {
+      "LIMIT_BAL": 1.0,
+      "BILL_AMT1": 2.7,
+      "BILL_AMT2": 2.7,
+      "BILL_AMT3": 3.1,
+      "BILL_AMT4": 2.8,
+      "BILL_AMT5": 2.9,
+      "BILL_AMT6": 2.8,
+      "PAY_AMT1": 14.7,
+      "PAY_AMT2": 30.4,
+      "PAY_AMT3": 17.2,
+      "PAY_AMT4": 12.9,
+      "PAY_AMT5": 11.1,
+      "PAY_AMT6": 10.6
+    }
   }
 }
