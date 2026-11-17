@@ -21,7 +21,10 @@ def dataset_splits():
     test_path = os.path.join(processed_dir, 'test.csv')
 
     if not (os.path.exists(train_path) and os.path.exists(test_path)):
-        raw_df = load_raw_data()
+        try:
+            raw_df = load_raw_data()
+        except FileNotFoundError as err:
+            pytest.skip(f"raw dataset not available: {err}")
         clean_df, audit = clean_and_prepare_data(raw_df)
         train_df, test_df, _ = split_and_save_data(clean_df, audit, output_dir=processed_dir)
     else:

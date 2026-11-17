@@ -8,24 +8,94 @@ remove the 35 exact duplicate rows, put undocumented codes into 'Others'
 columns on the training part only.
 """
 
+import io
 import os
 import json
+import zipfile
+import urllib.request
 import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split
 
 
-def load_raw_data(filepath=None):
-    """Locate and load raw dataset from Excel or CSV."""
+RAW_DIR = os.path.join(os.path.dirname(__file__), '..', 'data', 'raw')
+RAW_XLS_NAME = 'default of credit card clients.xls'
+DATASET_PAGE = 'https://archive.ics.uci.edu/dataset/350/default+of+credit+card+clients'
+# Tried in this order. The first is the current UCI download (a zip with the .xls
+# inside); the second is the older direct link to the .xls file.
+DOWNLOAD_URLS = [
+    'https://archive.ics.uci.edu/static/public/350/default+of+credit+card+clients.zip',
+    'https://archive.ics.uci.edu/ml/machine-learning-databases/00350/default%20of%20credit%20card%20clients.xls',
+]
+
+
+def _xls_from_zip(zip_bytes_or_path, out_path):
+    """Pull the .xls file out of a zip (given as bytes or a path) and save it."""
+    source = io.BytesIO(zip_bytes_or_path) if isinstance(zip_bytes_or_path, bytes) else zip_bytes_or_path
+    with zipfile.ZipFile(source) as zf:
+        members = [m for m in zf.namelist() if m.lower().endswith('.xls')]
+        if not members:
+            raise ValueError("no .xls file inside the zip")
+        with open(out_path, 'wb') as f:
+            f.write(zf.read(members[0]))
+
+
+def download_raw_data(raw_dir=RAW_DIR, timeout=60):
+    """
+    Gets the UCI .xls into data/raw/. Uses a zip that is already in data/raw/
+    if there is one, otherwise downloads it. Returns the path to the .xls.
+    """
+    os.makedirs(raw_dir, exist_ok=True)
+    out_path = os.path.join(raw_dir, RAW_XLS_NAME)
+
+    # 1. a zip someone already downloaded by hand
+    local_zips = [f for f in os.listdir(raw_dir) if f.lower().endswith('.zip')]
+    for name in local_zips:
+        try:
+            _xls_from_zip(os.path.join(raw_dir, name), out_path)
+            print(f"[DataLoader] Extracted the dataset from {name}")
+            return out_path
+        except (zipfile.BadZipFile, ValueError):
+            pass
+
+    # 2. download from UCI
+    errors = []
+    for url in DOWNLOAD_URLS:
+        try:
+            print(f"[DataLoader] Downloading the dataset from {url} ...")
+            with urllib.request.urlopen(url, timeout=timeout) as resp:
+                data = resp.read()
+            if url.endswith('.zip'):
+                _xls_from_zip(data, out_path)
+            else:
+                with open(out_path, 'wb') as f:
+                    f.write(data)
+            print(f"[DataLoader] Saved {out_path}")
+            return out_path
+        except Exception as err:  # network errors, SSL errors, bad zip, ...
+            errors.append(f"{url}: {err}")
+
+    raise FileNotFoundError(
+        "Could not find or download the raw dataset.\n"
+        + "\n".join("  - " + e for e in errors)
+        + f"\nPlease download it by hand from {DATASET_PAGE} and put "
+        f"'{RAW_XLS_NAME}' (or the downloaded .zip) in data/raw/."
+    )
+
+
+def load_raw_data(filepath=None, download=True):
+    """Load the raw UCI data. If it isn't in data/raw/ yet, download it first."""
     if filepath is None:
-        default_xls = os.path.join(os.path.dirname(__file__), '..', 'data', 'raw', 'default of credit card clients.xls')
-        default_csv = os.path.join(os.path.dirname(__file__), '..', 'data', 'raw', 'default of credit card clients.csv')
+        default_xls = os.path.join(RAW_DIR, RAW_XLS_NAME)
+        default_csv = os.path.join(RAW_DIR, 'default of credit card clients.csv')
         if os.path.exists(default_xls):
             filepath = default_xls
         elif os.path.exists(default_csv):
             filepath = default_csv
+        elif download:
+            filepath = download_raw_data()
         else:
-            raise FileNotFoundError("Raw UCI dataset not found in data/raw/")
+            raise FileNotFoundError(f"Raw UCI dataset not found in data/raw/ (see {DATASET_PAGE})")
 
     print(f"[DataLoader] Reading raw data from: {filepath}")
     if filepath.endswith('.xls') or filepath.endswith('.xlsx'):

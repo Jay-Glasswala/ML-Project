@@ -382,8 +382,8 @@ function populateModelComparisonTable() {
   // Paired test summary
   if (evalObj.paired_difference_test) {
     const pt = evalObj.paired_difference_test.delta_metrics;
-    document.getElementById('delta-prauc').textContent = `+${pt.delta_pr_auc_ci95[0]} to +${pt.delta_pr_auc_ci95[1]} (Strictly Positive)`;
-    document.getElementById('delta-cost').textContent = `${pt.delta_cost_ci95[0]} to ${pt.delta_cost_ci95[1]} c_FP (Cost Reduction)`;
+    document.getElementById('delta-prauc').textContent = `+${pt.delta_pr_auc_ci95[0]} to +${pt.delta_pr_auc_ci95[1]} (95% CI)`;
+    document.getElementById('delta-cost').textContent = `${pt.delta_cost_ci95[0]} to ${pt.delta_cost_ci95[1]} c_FP per client (95% CI)`;
   }
 }
 

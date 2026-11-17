@@ -3,6 +3,7 @@
 IIT Gandhinagar, Fall 2026
 
 Website: https://Jay-Glasswala.github.io/ML-Project/  
+[![tests](https://github.com/Jay-Glasswala/ML-Project/actions/workflows/tests.yml/badge.svg)](https://github.com/Jay-Glasswala/ML-Project/actions/workflows/tests.yml)  
 Dataset: [UCI Default of Credit Card Clients](https://archive.ics.uci.edu/dataset/350/default+of+credit+card+clients) (CC BY 4.0)
 
 ---
@@ -171,7 +172,7 @@ It reads the saved test predictions from `web/data/test_results.json` (about 106
 * **Dataset:** Default of Credit Card Clients, UCI Machine Learning Repository (Yeh and Lien, 2009)
 * **Link:** https://archive.ics.uci.edu/dataset/350/default+of+credit+card+clients
 * **License:** CC BY 4.0
-* **Getting the data:** `python run_all.py` (or `python src/data_loader.py`) looks for `data/raw/default of credit card clients.xls` and downloads it if it isn't there. If the download fails, download the `.xls` from the link above and put it in `data/raw/` yourself.
+* **Getting the data:** `python run_all.py` (or `python src/data_loader.py`) looks for `data/raw/default of credit card clients.xls`. If it isn't there, it first checks for a downloaded `.zip` in `data/raw/` and unpacks it, otherwise it downloads the data from UCI (`download_raw_data` in `src/data_loader.py`). If the download fails (for example, no internet), download the dataset from the link above and put the `.xls` or the `.zip` in `data/raw/` yourself. Without the data, the data tests are skipped with this message instead of failing.
 * **Odd and extreme values** (`check_bill_values` in `src/data_loader.py`, saved in `summary_metrics.json`). We counted these but didn't remove them, because they look like real account situations rather than errors:
   * 1,930 clients have at least one negative bill (lowest: -339,603 NT$). A negative bill most likely means the client paid more than they owed. Their default rate is 16.5%, lower than the overall 22.1%.
   * 3,931 clients had a bill above their credit limit in at least one month (343 were above 1.5× the limit). Their default rate is 30.1%.
@@ -206,6 +207,12 @@ python -m http.server 8000   # then open http://localhost:8000
 
 You can also run the error analysis and robustness checks on their own with `python -m src.error_analysis` and `python -m src.robustness_checks`.
 
+**Optional: Node.js.** One test (`test_predictor_js_matches_sklearn`) runs the website's JavaScript predictor with Node.js to check it against scikit-learn. Node isn't a Python package, so it's not in `requirements.txt`; install it from https://nodejs.org (or `conda install -c conda-forge nodejs`). Without it, that test is skipped and the same maths is still checked in Python.
+
+**Automatic check on GitHub:** `.github/workflows/tests.yml` runs `python run_all.py` and then `pytest` (with Node.js) on GitHub's servers after every push to `main`. The badge at the top shows whether the last run passed.
+
+**Notebook:** `notebooks/eda_and_collinearity.ipynb` has the correlation and VIF plots, the Ridge/Lasso regularization paths and the feature-importance chart. It reads the files that `run_all.py` saves, so run that first.
+
 ---
 
 ## Use of AI tools
@@ -214,7 +221,7 @@ As the course rules require, here is how we used AI tools:
 * **Website:** We used AI tools (Claude, Gemini, ChatGPT) to help build the website (HTML layout, CSS, the Chart.js charts and the slider code). The course is about the ML, not web development, so we focused our own effort there.
 * **ML code:** We used AI for help with standard coding tasks: suggesting hyperparameter ranges, `ColumnTransformer` pipeline boilerplate, speeding up the bootstrap loops with NumPy, and fixing convergence warnings.
 * **Our decisions:** The problem setup, the derivation of $t^* = 1/(1+r)$, the data cleaning choices (finding the 35 duplicates, recoding the undocumented codes), the model comparisons, the quantile ECE and the conclusions were our decisions. We checked the results and can explain them.
-* **Results check and extra analysis:** We used Claude (Anthropic) to cross-check the README and website against our output files, to write `src/error_analysis.py`, `src/robustness_checks.py`, the `check_bill_values` function in `src/data_loader.py`, and the "Check a client" tool (`src/export_predictor.py`, `web/predictor.js`, `web/check_client.js`, `tests/test_predictor_parity.py`), and to rewrite the error analysis, calibration and collinearity text from their outputs. It also helped rewrite the README and website in simpler language. We reviewed these results ourselves.
+* **Results check and extra analysis:** We used Claude (Anthropic) to cross-check the README and website against our output files, to write `src/error_analysis.py`, `src/robustness_checks.py`, the `check_bill_values` function in `src/data_loader.py`, the "Check a client" tool (`src/export_predictor.py`, `web/predictor.js`, `web/check_client.js`, `tests/test_predictor_parity.py`), the automatic data download, the GitHub Actions test workflow, and the updated notebook sections, and to rewrite the error analysis, calibration and collinearity text from their outputs. It also helped rewrite the README and website in simpler language. We reviewed these results ourselves.
 * **No private data:** There are no passwords, API keys or private data in this repo. All data comes from the public UCI repository.
 
 ---

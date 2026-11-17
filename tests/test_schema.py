@@ -1,5 +1,5 @@
 """
-Checks that the raw data loads with the expected shape and that the cleaning
+Checks that the raw data loads (downloading it if needed) with the expected shape and that the cleaning
 step gives the numbers we expect (35 duplicates, 345 + 54 recoded rows, etc.).
 """
 
@@ -10,15 +10,24 @@ import pytest
 from src.data_loader import load_raw_data, clean_and_prepare_data
 
 
-def test_raw_data_shape():
-    df = load_raw_data()
+@pytest.fixture(scope="module")
+def raw_df():
+    # load_raw_data() downloads the data if needed; if that isn't possible
+    # (no internet), skip these tests with the reason instead of failing
+    try:
+        return load_raw_data()
+    except FileNotFoundError as err:
+        pytest.skip(f"raw dataset not available: {err}")
+
+
+def test_raw_data_shape(raw_df):
+    df = raw_df
     assert df.shape == (30000, 25), f"Expected (30000, 25), got {df.shape}"
     assert 'ID' in df.columns, "Expected 'ID' column in raw data"
 
 
-def test_clean_and_prepare_data():
-    raw_df = load_raw_data()
-    df, audit = clean_and_prepare_data(raw_df)
+def test_clean_and_prepare_data(raw_df):
+    df, audit = clean_and_prepare_data(raw_df.copy())
     
     # 1. Assert exactly 35 duplicate rows dropped
     assert audit['duplicate_rows_removed'] == 35, f"Expected 35 duplicates, got {audit['duplicate_rows_removed']}"
