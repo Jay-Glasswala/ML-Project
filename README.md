@@ -35,18 +35,18 @@ When missing a defaulter is $5\times$ more costly than a false alarm ($r = 5$), 
 
 ## Key Empirical Findings
 
-All models were tuned via **Stratified 5-Fold Cross-Validation** on the training partition ($N=23,972$) and evaluated once on the sealed held-out test partition ($N=5,993$). $95\%$ Confidence Intervals are computed via **1,000 stratified bootstrap resamples**.
+All models were tuned via **Stratified 5-Fold Cross-Validation** on the training partition ($N=23,972$) and evaluated once on the sealed held-out test partition ($N=5,993$). Decision thresholds are not tuned on data: each cost ratio $r$ uses the Bayes rule $t^* = 1/(1+r)$, which is valid because the selected models are well calibrated (quantile ECE $\approx 0.01$ for the ensembles). The final RBF-SVM grid was $(C, \gamma) \in \{(1, \text{scale}), (1, 0.05), (5, \text{scale})\}$ on a stratified 6,000-row subsample, narrowed from the proposal grid for runtime. $95\%$ Confidence Intervals are computed via **1,000 stratified bootstrap resamples**.
 
 | Model Architecture | PR-AUC [95% CI] | Log-Loss [95% CI] | Brier Score | ECE (Quantile) | Expected Cost @ $r=5$ [95% CI] | Recall @ $P \ge 0.50$ |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
-| **HistGradientBoosting (Best)** | **0.5548** [0.528, 0.582] | **0.4328** [0.420, 0.446] | **0.1348** | **0.0114** | **0.5648** [0.527, 0.603] | **65.1%** |
-| **Random Forest** | 0.5505 [0.523, 0.578] | 0.4346 [0.422, 0.447] | 0.1352 | 0.0100 | 0.5810 [0.543, 0.620] | 63.8% |
-| **RBF-Kernel SVM (Platt)** | 0.4934 [0.465, 0.523] | 0.4614 [0.450, 0.473] | 0.1448 | 0.0295 | 0.6888 [0.650, 0.728] | 56.4% |
-| **Elastic-Net Logistic** | 0.5037 [0.475, 0.533] | 0.4670 [0.457, 0.477] | 0.1466 | 0.0516 | 0.6980 [0.660, 0.738] | 57.2% |
-| **Ridge Logistic (L2)** | 0.5034 [0.475, 0.533] | 0.4671 [0.457, 0.477] | 0.1466 | 0.0514 | 0.6993 [0.661, 0.739] | 57.0% |
-| **Lasso Logistic (L1)** | 0.5035 [0.475, 0.533] | 0.4671 [0.457, 0.477] | 0.1466 | 0.0518 | 0.6998 [0.662, 0.739] | 57.1% |
-| **Plain Logistic (Reference)** | 0.5034 [0.475, 0.533] | 0.4672 [0.457, 0.477] | 0.1467 | 0.0520 | 0.7022 [0.664, 0.742] | 57.0% |
-| **Majority Class (Baseline)** | 0.2213 [0.211, 0.232] | 7.9750 | 0.2213 | 0.2213 | 1.1063 [1.053, 1.160] | 0.0% |
+| **HistGradientBoosting (Best)** | **0.5548** [0.528, 0.583] | **0.4328** [0.417, 0.447] | **0.1360** | **0.0114** | **0.5648** [0.534, 0.594] | **55.7%** |
+| **Random Forest** | 0.5503 [0.524, 0.580] | 0.4346 [0.419, 0.449] | 0.1363 | 0.0097 | 0.5810 [0.550, 0.613] | 56.7% |
+| **RBF-Kernel SVM (Platt)** | 0.4934 [0.465, 0.523] | 0.4614 [0.445, 0.477] | 0.1441 | 0.0290 | 0.6888 [0.648, 0.728] | 45.3% |
+| **Elastic-Net Logistic** | 0.5037 [0.475, 0.534] | 0.4670 [0.451, 0.482] | 0.1456 | 0.0516 | 0.6980 [0.670, 0.725] | 50.9% |
+| **Ridge Logistic (L2)** | 0.5034 [0.475, 0.533] | 0.4671 [0.451, 0.482] | 0.1456 | 0.0514 | 0.6993 [0.671, 0.727] | 50.7% |
+| **Lasso Logistic (L1)** | 0.5035 [0.475, 0.534] | 0.4671 [0.451, 0.482] | 0.1456 | 0.0518 | 0.6998 [0.672, 0.728] | 50.8% |
+| **Plain Logistic (Reference)** | 0.5034 [0.475, 0.533] | 0.4672 [0.451, 0.482] | 0.1456 | 0.0520 | 0.7022 [0.674, 0.730] | 50.7% |
+| **Majority Class (Baseline)** | 0.2213 [0.211, 0.232] | 7.9750 | 0.2213 | 0.2213 | 1.1063 [1.054, 1.162] | 0.0% |
 
 ### Paired Bootstrap Hypothesis Testing
 * **$\Delta$ PR-AUC (HistGradientBoosting vs. Plain Logistic):** $+0.0514$ ($95\%$ CI: `[+0.0353, +0.0685]`). Because the confidence interval strictly excludes zero, the non-linear ensemble delivers a statistically significant improvement over linear baselines.
@@ -56,7 +56,17 @@ All models were tuned via **Stratified 5-Fold Cross-Validation** on the training
 Variance Inflation Factor (VIF) on training fold data:
 * `BILL_AMT1`: $11.49$ &bull; `BILL_AMT2`: $17.08$ &bull; `BILL_AMT3`: $10.33$
 * `BILL_AMT4`: $13.76$ &bull; `BILL_AMT5`: $16.03$ &bull; `BILL_AMT6`: $9.97$
-* Adjacent-month bill correlations reach $r = 0.955$. Ridge ($L_2$) shrinks correlated feature weights smoothly together, while Lasso ($L_1$) selects `BILL_AMT1` (the most recent balance) and drives intermediate redundant months to zero.
+* Adjacent-month bill correlations reach $r = 0.955$.
+* Fitted bill-amount coefficients (standardized features, CV-selected penalties):
+
+| Model | `BILL_AMT1` | `BILL_AMT2` | `BILL_AMT3` | `BILL_AMT4` | `BILL_AMT5` | `BILL_AMT6` |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: |
+| Plain Logistic | −0.469 | +0.304 | −0.030 | −0.005 | +0.033 | +0.064 |
+| Ridge ($C=0.1$) | −0.416 | +0.237 | −0.008 | −0.016 | +0.025 | +0.074 |
+| Lasso ($C=1.0$) | −0.442 | +0.258 | −0.005 | **0** | +0.020 | +0.066 |
+| Elastic-Net ($C=0.1$, $\ell_1$ ratio $=0.5$) | −0.348 | +0.156 | **0** | **0** | +0.018 | +0.067 |
+
+* **Interpretation:** In every linear model, `BILL_AMT1` and `BILL_AMT2` receive large weights of *opposite sign*, a classic collinearity signature: the model effectively uses the month-over-month change in balance rather than either level. Ridge pulls these two weights toward each other but keeps all six months. Cross-validation selected only a weak Lasso penalty ($C=1.0$), so Lasso zeroes just `BILL_AMT4`; Elastic-Net zeroes `BILL_AMT3` and `BILL_AMT4`. Stronger L1 penalties drive more months to zero (see the regularization paths in `notebooks/eda_and_collinearity.ipynb`), but at the CV-optimal strength all four linear models reach virtually identical test PR-AUC ($\approx 0.503$), so regularization changes the coefficients far more than the predictions.
 
 ---
 

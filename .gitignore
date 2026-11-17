@@ -53,3 +53,7 @@ data/processed/*.joblib
 .DS_Store
 Thumbs.db
 *.zip
+
+# Private planning docs
+ES335_Credit_Card_Default_Master_Plan.pdf
+generate_pdf.py

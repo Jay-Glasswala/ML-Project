@@ -612,8 +612,8 @@
             The mathematical formula $t^* = \frac{1}{1 + r}$ holds if and only if predicted probabilities represent true empirical frequencies ($P(y=1 \mid \hat{p} = q) \approx q$).
           </p>
           <ul class="bullet-list">
-            <li><strong>HistGradientBoosting:</strong> Achieves outstanding calibration ($\text{ECE} = 0.0114$, $\text{Brier} = 0.1348$), aligning tightly with the ideal diagonal.</li>
-            <li><strong>RBF-SVM with Platt Scaling:</strong> Fitting a sigmoid over margin scores transforms geometric distances into calibrated probabilities ($\text{ECE} = 0.0295$).</li>
+            <li><strong>HistGradientBoosting:</strong> Achieves outstanding calibration ($\text{ECE} = 0.0114$, $\text{Brier} = 0.1360$), aligning tightly with the ideal diagonal.</li>
+            <li><strong>RBF-SVM with Platt Scaling:</strong> Fitting a sigmoid over margin scores transforms geometric distances into calibrated probabilities ($\text{ECE} = 0.0290$).</li>
             <li><strong>Class Weighting Warning:</strong> Training with <code>class_weight='balanced'</code> artificially shifts predicted probabilities toward 0.5, destroying calibration and making the Bayes formula invalid.</li>
           </ul>
         </div>
