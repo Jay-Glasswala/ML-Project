@@ -7,7 +7,7 @@ Runs the whole project from start to finish:
 4. evaluate on the test set (with bootstrap intervals)
 5. fairness check
 6. error analysis and extra checks (threshold, class weights, coefficient stability)
-7. export the data for the website
+7. export the data for the website (including the model file for the "Check a client" tool)
 
 Set SKIP_CV=1 to reuse the models saved by the last full run instead of re-tuning.
 """
@@ -83,6 +83,8 @@ def main():
     web_dir = os.path.join(project_root, 'web')
     docs_dir = os.path.join(project_root, 'docs')
     export_web_artifacts(processed_dir, web_dir)
+    from src.export_predictor import export_predictor
+    export_predictor(processed_dir, web_dir)
     # Mirror web to docs for GitHub Pages standard deployment
     if os.path.exists(docs_dir):
         shutil.rmtree(docs_dir)

@@ -499,3 +499,27 @@ input[type=range] {
   font-size: 0.85rem;
   text-align: center;
 }
+
+/* Section 7b: Check a client */
+.cc-examples { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; margin-top: 1rem; }
+.cc-example-btn {
+  border: 1px solid var(--border); background: white; border-radius: 6px;
+  padding: 0.35rem 0.7rem; font-size: 0.8rem; cursor: pointer; margin: 0.15rem;
+}
+.cc-example-btn:hover { border-color: var(--primary); color: var(--primary); }
+.cc-example-btn.active { background: var(--primary); border-color: var(--primary); color: white; }
+.cc-basic { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; }
+.cc-basic label { display: flex; flex-direction: column; font-size: 0.8rem; font-weight: 600; gap: 0.25rem; }
+.cc-num {
+  width: 100%; padding: 0.4rem 0.5rem; border: 1px solid var(--border);
+  border-radius: 6px; font-size: 0.85rem; box-sizing: border-box;
+}
+.cc-table td { padding: 0.3rem 0.4rem; }
+.cc-table .form-select { padding: 0.3rem; font-size: 0.8rem; width: 100%; }
+.cc-results { grid-template-columns: repeat(2, 1fr); }
+.cc-whatif-box { margin-top: 1rem; background: white; border: 1px solid var(--border); border-radius: 8px; padding: 1rem; }
+.cc-warning { color: var(--danger); margin-top: 0.5rem; }
+@media (max-width: 768px) { .cc-basic { grid-template-columns: 1fr; } }
+
+.cc-verdict { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.4rem; }
+.cc-verdict span { font-size: 1rem; padding: 0.3rem 0.7rem; }

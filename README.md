@@ -157,9 +157,10 @@ We decided not to use different thresholds for different groups, since that woul
 
 ## Website
 
-The website is a static page on GitHub Pages (no backend). It has two interactive parts:
+The website is a static page on GitHub Pages (no backend). It has three interactive parts:
 * **Cost slider:** you pick a model and a cost ratio $r$ from 1 to 10. The page computes $t^* = 1/(1+r)$, re-scores all 5,993 test clients in the browser, and updates the confusion matrix, cost and recall.
 * **Fairness view:** shows false alarm and missed-defaulter rates for each sex, education or marital-status group at the current threshold.
+* **Check a client:** fill in one client's details (or load one of four real test clients) to get the default probability from HistGradientBoosting and Ridge, the flag / don't-flag decision at the slider's cost ratio, and a simple what-if showing which inputs move the probability most. The models run in the browser: `src/export_predictor.py` saves the fitted models to `web/data/predictor.json` and `web/predictor.js` evaluates them. `tests/test_predictor_parity.py` checks that the browser code gives the same probability as scikit-learn for all 5,993 test clients (it uses `node` if installed). This is a demo of the model, not a lending tool.
 
 It reads the saved test predictions from `web/data/test_results.json` (about 106 KB gzipped).
 
@@ -191,7 +192,7 @@ cd ML-Project
 # 2. Install the packages
 pip install -r requirements.txt
 
-# 3. Run the tests (data checks and leakage checks)
+# 3. Run the tests (data checks, leakage checks, website predictor = scikit-learn)
 pytest -v
 
 # 4. Run everything
@@ -213,7 +214,7 @@ As the course rules require, here is how we used AI tools:
 * **Website:** We used AI tools (Claude, Gemini, ChatGPT) to help build the website (HTML layout, CSS, the Chart.js charts and the slider code). The course is about the ML, not web development, so we focused our own effort there.
 * **ML code:** We used AI for help with standard coding tasks: suggesting hyperparameter ranges, `ColumnTransformer` pipeline boilerplate, speeding up the bootstrap loops with NumPy, and fixing convergence warnings.
 * **Our decisions:** The problem setup, the derivation of $t^* = 1/(1+r)$, the data cleaning choices (finding the 35 duplicates, recoding the undocumented codes), the model comparisons, the quantile ECE and the conclusions were our decisions. We checked the results and can explain them.
-* **Results check and extra analysis:** We used Claude (Anthropic) to cross-check the README and website against our output files, to write `src/error_analysis.py`, `src/robustness_checks.py` and the `check_bill_values` function in `src/data_loader.py`, and to rewrite the error analysis, calibration and collinearity text from their outputs. It also helped rewrite the README and website in simpler language. We reviewed these results ourselves.
+* **Results check and extra analysis:** We used Claude (Anthropic) to cross-check the README and website against our output files, to write `src/error_analysis.py`, `src/robustness_checks.py`, the `check_bill_values` function in `src/data_loader.py`, and the "Check a client" tool (`src/export_predictor.py`, `web/predictor.js`, `web/check_client.js`, `tests/test_predictor_parity.py`), and to rewrite the error analysis, calibration and collinearity text from their outputs. It also helped rewrite the README and website in simpler language. We reviewed these results ourselves.
 * **No private data:** There are no passwords, API keys or private data in this repo. All data comes from the public UCI repository.
 
 ---

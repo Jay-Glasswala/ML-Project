@@ -48,6 +48,7 @@
       <a href="#evaluation-design">5. Evaluation</a>
       <a href="#simulator">6. Cost Slider</a>
       <a href="#fairness">7. Fairness</a>
+      <a href="#check-client">7b. Check a Client</a>
       <a href="#results">8. Results</a>
       <a href="#collinearity">8b. Bill Columns</a>
       <a href="#calibration">9. Calibration</a>
@@ -540,6 +541,109 @@
       </div>
     </section>
 
+    <!-- Section 7b: Check a client -->
+    <section id="check-client" class="section-card interactive-section">
+      <div class="interactive-badge">Interactive</div>
+      <span class="section-num">Section 07b</span>
+      <h2>Try It: Check a Client</h2>
+      <p>
+        Fill in a client's details (or load one of the real test clients below) and see what our models predict. The prediction runs in your browser using the same fitted HistGradientBoosting and Ridge models as the rest of the page: <code>src/export_predictor.py</code> saves them to <code>data/predictor.json</code>, and <code>tests/test_predictor_parity.py</code> checks that the browser gives the same probability as scikit-learn for all 5,993 test clients.
+      </p>
+      <p class="note-text">
+        This is a demo of our model, not a lending tool. It was trained on Taiwanese clients from 2005 and only sees the inputs below.
+      </p>
+
+      <div class="cc-examples">
+        <span class="text-sm text-muted">Load a real test client:</span>
+        <span id="cc-example-buttons"></span>
+      </div>
+
+      <div class="grid-2" style="margin-top: 1rem;">
+        <div>
+          <div class="cc-basic">
+            <label>Credit limit (NT$)<input class="cc-num cc-input" type="number" min="10000" step="10000" id="cc-LIMIT_BAL"></label>
+            <label>Age<input class="cc-num cc-input" type="number" min="21" max="79" id="cc-AGE"></label>
+            <label>Education
+              <select class="form-select cc-input" id="cc-EDUCATION">
+                <option value="1">Graduate school</option>
+                <option value="2">University</option>
+                <option value="3">High school</option>
+                <option value="4">Others</option>
+              </select>
+            </label>
+          </div>
+          <div class="table-responsive" style="margin-top: 0.75rem;">
+            <table class="data-table cc-table">
+              <thead><tr><th>Month (2005)</th><th>Repayment status</th><th>Bill (NT$)</th><th>Amount paid (NT$)</th></tr></thead>
+              <tbody>
+              <tr>
+                <td><strong>Sep</strong></td>
+                <td><select class="form-select cc-input" id="cc-PAY_1"><option value="-2">No bill</option><option value="-1">Paid in full</option><option value="0">Paid minimum</option><option value="1">1 month late</option><option value="2">2 months late</option><option value="3">3 months late</option><option value="4">4 months late</option><option value="5">5 months late</option><option value="6">6 months late</option><option value="7">7 months late</option><option value="8">8 months late</option></select></td>
+                <td><input class="cc-num cc-input" type="number" step="100" id="cc-BILL_AMT1"></td>
+                <td><input class="cc-num cc-input" type="number" min="0" step="100" id="cc-PAY_AMT1"></td>
+              </tr>
+              <tr>
+                <td><strong>Aug</strong></td>
+                <td><select class="form-select cc-input" id="cc-PAY_2"><option value="-2">No bill</option><option value="-1">Paid in full</option><option value="0">Paid minimum</option><option value="1">1 month late</option><option value="2">2 months late</option><option value="3">3 months late</option><option value="4">4 months late</option><option value="5">5 months late</option><option value="6">6 months late</option><option value="7">7 months late</option><option value="8">8 months late</option></select></td>
+                <td><input class="cc-num cc-input" type="number" step="100" id="cc-BILL_AMT2"></td>
+                <td><input class="cc-num cc-input" type="number" min="0" step="100" id="cc-PAY_AMT2"></td>
+              </tr>
+              <tr>
+                <td><strong>Jul</strong></td>
+                <td><select class="form-select cc-input" id="cc-PAY_3"><option value="-2">No bill</option><option value="-1">Paid in full</option><option value="0">Paid minimum</option><option value="1">1 month late</option><option value="2">2 months late</option><option value="3">3 months late</option><option value="4">4 months late</option><option value="5">5 months late</option><option value="6">6 months late</option><option value="7">7 months late</option><option value="8">8 months late</option></select></td>
+                <td><input class="cc-num cc-input" type="number" step="100" id="cc-BILL_AMT3"></td>
+                <td><input class="cc-num cc-input" type="number" min="0" step="100" id="cc-PAY_AMT3"></td>
+              </tr>
+              <tr>
+                <td><strong>Jun</strong></td>
+                <td><select class="form-select cc-input" id="cc-PAY_4"><option value="-2">No bill</option><option value="-1">Paid in full</option><option value="0">Paid minimum</option><option value="1">1 month late</option><option value="2">2 months late</option><option value="3">3 months late</option><option value="4">4 months late</option><option value="5">5 months late</option><option value="6">6 months late</option><option value="7">7 months late</option><option value="8">8 months late</option></select></td>
+                <td><input class="cc-num cc-input" type="number" step="100" id="cc-BILL_AMT4"></td>
+                <td><input class="cc-num cc-input" type="number" min="0" step="100" id="cc-PAY_AMT4"></td>
+              </tr>
+              <tr>
+                <td><strong>May</strong></td>
+                <td><select class="form-select cc-input" id="cc-PAY_5"><option value="-2">No bill</option><option value="-1">Paid in full</option><option value="0">Paid minimum</option><option value="1">1 month late</option><option value="2">2 months late</option><option value="3">3 months late</option><option value="4">4 months late</option><option value="5">5 months late</option><option value="6">6 months late</option><option value="7">7 months late</option><option value="8">8 months late</option></select></td>
+                <td><input class="cc-num cc-input" type="number" step="100" id="cc-BILL_AMT5"></td>
+                <td><input class="cc-num cc-input" type="number" min="0" step="100" id="cc-PAY_AMT5"></td>
+              </tr>
+              <tr>
+                <td><strong>Apr</strong></td>
+                <td><select class="form-select cc-input" id="cc-PAY_6"><option value="-2">No bill</option><option value="-1">Paid in full</option><option value="0">Paid minimum</option><option value="1">1 month late</option><option value="2">2 months late</option><option value="3">3 months late</option><option value="4">4 months late</option><option value="5">5 months late</option><option value="6">6 months late</option><option value="7">7 months late</option><option value="8">8 months late</option></select></td>
+                <td><input class="cc-num cc-input" type="number" step="100" id="cc-BILL_AMT6"></td>
+                <td><input class="cc-num cc-input" type="number" min="0" step="100" id="cc-PAY_AMT6"></td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="text-sm text-muted">SEX and MARRIAGE aren't asked because the model doesn't use them.</p>
+        </div>
+
+        <div>
+          <div class="live-metrics cc-results">
+            <div class="metric-card highlight-metric">
+              <span class="m-label">Default probability (HGB)</span>
+              <span class="m-val" id="cc-p-hgb">--</span>
+            </div>
+            <div class="metric-card">
+              <span class="m-label">Default probability (Ridge)</span>
+              <span class="m-val" id="cc-p-ridge">--</span>
+            </div>
+          </div>
+          <div class="callout-box" style="margin-top: 1rem;">
+            <div id="cc-decision">--</div>
+            <p class="text-sm text-muted" style="margin-top: 0.35rem;">Uses the cost ratio from the slider in Section 6 (currently <span id="cc-r">5.0</span> : 1, so the threshold is <span id="cc-t">0.167</span>).</p>
+          </div>
+          <div class="card p-3 cc-whatif-box">
+            <h4>What changes the HGB prediction most?</h4>
+            <p class="text-sm text-muted">For each input we put back a typical value (the training median, or "paid minimum" for repayment status) and see how much the probability moves. This is a simple what-if check, not a full explanation of the model.</p>
+            <ul class="bullet-list" id="cc-whatif"><li>--</li></ul>
+          </div>
+          <p class="text-sm cc-warning" id="cc-warning"></p>
+          <p class="text-sm text-muted" id="cc-example-note"></p>
+        </div>
+      </div>
+    </section>
+
     <!-- Section 8: Results & Empirical Comparisons -->
     <section id="results" class="section-card">
       <span class="section-num">Section 08</span>
@@ -781,7 +885,7 @@ python -m http.server 8000</code></pre>
             <strong>Our decisions:</strong> The problem setup, the derivation of $t^* = \frac{1}{1+r}$, the data cleaning choices, the model comparisons, the quantile ECE, the bootstrap tests and the conclusions were our decisions. We checked the results and can explain them.
           </p>
           <p class="text-sm text-muted" style="margin-top: 0.5rem;">
-            <strong>Results check:</strong> Claude (Anthropic) was used to cross-check the README and website against the generated output files, to write <code>src/error_analysis.py</code>, <code>src/robustness_checks.py</code> and the <code>check_bill_values</code> function in <code>src/data_loader.py</code>, and to rewrite the error analysis, calibration and collinearity text from their outputs. It also helped rewrite this page and the README in simpler language. We reviewed the results ourselves.
+            <strong>Results check:</strong> Claude (Anthropic) was used to cross-check the README and website against the generated output files, to write <code>src/error_analysis.py</code>, <code>src/robustness_checks.py</code>, the <code>check_bill_values</code> function in <code>src/data_loader.py</code>, and the "Check a client" tool (Section 7b), and to rewrite the error analysis, calibration and collinearity text from their outputs. It also helped rewrite this page and the README in simpler language. We reviewed the results ourselves.
           </p>
           <p class="text-sm text-muted" style="margin-top: 0.5rem;">
             <strong>Citation:</strong> Yeh, I. C., & Lien, C. H. (2009). The comparisons of data mining techniques for the predictive accuracy of probability of default of credit card clients. <em>Expert Systems with Applications</em>, 36(2), 2473-2480.
@@ -803,5 +907,7 @@ python -m http.server 8000</code></pre>
   </footer>
 
   <script src="app.js"></script>
+  <script src="predictor.js"></script>
+  <script src="check_client.js"></script>
 </body>
 </html>
