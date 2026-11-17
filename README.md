@@ -27,7 +27,7 @@ When missing a defaulter is $5\times$ more costly than a false alarm ($r = 5$), 
 | Student Name | Roll Number | Primary Core Responsibilities |
 | :--- | :---: | :--- |
 | **Jay R. Glasswala** | `25110147` | Non-linear margin & ensemble modeling (Random Forest, HistGradientBoosting, RBF-SVM with Platt scaling), 5-fold cross-validation tuning, probability calibration & equal-frequency quantile ECE implementation, Bayes cost threshold optimization ($t^* = \frac{1}{1+r}$), paired bootstrap hypothesis testing, and GitHub Pages deployment. |
-| **Anant Shukla** | `25110030` | Data ingestion pipeline, duplicate identification (35 rows) and categorical recoding, scikit-learn `Pipeline` leakage prevention, collinearity & VIF analysis, Ridge vs. Lasso regularizer stability, subgroup demographic fairness auditing, and automated `pytest` test suite. |
+| **Anant Shukla** | `25110030` | Baseline and linear model family (majority class, plain, Ridge, Lasso and Elastic-Net logistic regression): cross-validated tuning and coefficient analysis under collinearity (VIF, correlation structure, L1 vs. L2 behavior on the six bill columns); leakage-free scikit-learn `Pipeline` preprocessing (scaling and encoding fit on training folds only, protected attributes excluded); data ingestion, duplicate removal (35 rows) and categorical recoding; subgroup demographic fairness audit; and automated `pytest` test suite. |
 
 *Both team members contributed equally to project discussions, reviewed all code, and can reproduce and defend every result end-to-end.*
 
