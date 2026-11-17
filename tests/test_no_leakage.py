@@ -1,7 +1,6 @@
 """
-Leakage Prevention and Pipeline Integrity Tests (tests/test_no_leakage.py)
-ES 335: Cost-Aware Credit Card Default Prediction
-Anant Shukla (25110030) & Jay R. Glasswala (25110147)
+Checks the train/test split sizes, that SEX and MARRIAGE are not model inputs,
+and that the pipeline is only fit on training data.
 """
 
 import os

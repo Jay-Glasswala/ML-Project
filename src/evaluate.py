@@ -1,7 +1,7 @@
 """
-Model Evaluation and Cost Analysis Module (src/evaluate.py)
-ES 335: Cost-Aware Credit Card Default Prediction
-Anant Shukla (25110030) & Jay R. Glasswala (25110147)
+Scores every model once on the test set: PR-AUC, log-loss, Brier, ECE,
+cost at different cost ratios, bootstrap confidence intervals, and the paired
+bootstrap test (HistGradientBoosting vs. plain logistic regression).
 """
 
 import os

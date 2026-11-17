@@ -1,0 +1,183 @@
+{
+  "model": "hist_gradient_boosting",
+  "r": 5.0,
+  "threshold": 0.1667,
+  "profiles": {
+    "true_positive": {
+      "n": 958,
+      "median_limit_bal": 80000.0,
+      "median_age": 35.0,
+      "share_late_in_sep": 0.685,
+      "mean_months_late": 2.74,
+      "median_util_sep": 0.482,
+      "median_paid_share_sep": 0.048,
+      "share_no_bill_sep": 0.12,
+      "median_prob": 0.499
+    },
+    "false_positive": {
+      "n": 1545,
+      "median_limit_bal": 90000.0,
+      "median_age": 34.0,
+      "share_late_in_sep": 0.393,
+      "mean_months_late": 1.39,
+      "median_util_sep": 0.123,
+      "median_paid_share_sep": 0.07,
+      "share_no_bill_sep": 0.186,
+      "median_prob": 0.265
+    },
+    "false_negative": {
+      "n": 368,
+      "median_limit_bal": 150000.0,
+      "median_age": 34.5,
+      "share_late_in_sep": 0.03,
+      "mean_months_late": 0.1,
+      "median_util_sep": 0.547,
+      "median_paid_share_sep": 0.056,
+      "share_no_bill_sep": 0.027,
+      "median_prob": 0.114
+    },
+    "true_negative": {
+      "n": 3122,
+      "median_limit_bal": 180000.0,
+      "median_age": 34.0,
+      "share_late_in_sep": 0.021,
+      "mean_months_late": 0.07,
+      "median_util_sep": 0.278,
+      "median_paid_share_sep": 0.064,
+      "share_no_bill_sep": 0.032,
+      "median_prob": 0.095
+    }
+  },
+  "examples_false_positive": [
+    {
+      "prob": 0.783,
+      "LIMIT_BAL": 60000,
+      "AGE": 40,
+      "PAY_1": 3,
+      "PAY_2": 3,
+      "PAY_3": 5,
+      "PAY_4": 4,
+      "PAY_5": 3,
+      "PAY_6": 2,
+      "BILL_AMT1": 9744,
+      "PAY_AMT1": 1500,
+      "UTIL_SEP": 0.162
+    },
+    {
+      "prob": 0.783,
+      "LIMIT_BAL": 60000,
+      "AGE": 31,
+      "PAY_1": 2,
+      "PAY_2": 0,
+      "PAY_3": 0,
+      "PAY_4": 0,
+      "PAY_5": 2,
+      "PAY_6": 2,
+      "BILL_AMT1": 19921,
+      "PAY_AMT1": 1700,
+      "UTIL_SEP": 0.332
+    },
+    {
+      "prob": 0.782,
+      "LIMIT_BAL": 20000,
+      "AGE": 34,
+      "PAY_1": 2,
+      "PAY_2": 2,
+      "PAY_3": 2,
+      "PAY_4": 2,
+      "PAY_5": 2,
+      "PAY_6": 2,
+      "BILL_AMT1": 13552,
+      "PAY_AMT1": 3188,
+      "UTIL_SEP": 0.678
+    }
+  ],
+  "examples_false_negative": [
+    {
+      "prob": 0.033,
+      "LIMIT_BAL": 260000,
+      "AGE": 48,
+      "PAY_1": 0,
+      "PAY_2": 0,
+      "PAY_3": 0,
+      "PAY_4": 0,
+      "PAY_5": 0,
+      "PAY_6": 0,
+      "BILL_AMT1": 135437,
+      "PAY_AMT1": 19020,
+      "UTIL_SEP": 0.521
+    },
+    {
+      "prob": 0.034,
+      "LIMIT_BAL": 500000,
+      "AGE": 40,
+      "PAY_1": -1,
+      "PAY_2": -1,
+      "PAY_3": -1,
+      "PAY_4": -1,
+      "PAY_5": -1,
+      "PAY_6": -1,
+      "BILL_AMT1": 11640,
+      "PAY_AMT1": 12836,
+      "UTIL_SEP": 0.023
+    },
+    {
+      "prob": 0.038,
+      "LIMIT_BAL": 300000,
+      "AGE": 42,
+      "PAY_1": -1,
+      "PAY_2": 0,
+      "PAY_3": 0,
+      "PAY_4": -1,
+      "PAY_5": 0,
+      "PAY_6": 0,
+      "BILL_AMT1": 11973,
+      "PAY_AMT1": 20979,
+      "UTIL_SEP": 0.04
+    }
+  ],
+  "fn_share_never_late": 0.913,
+  "fp_share_late_in_sep": 0.393,
+  "permutation_importance": [
+    {
+      "feature": "PAY_1",
+      "mean_drop": 0.2048,
+      "std": 0.008
+    },
+    {
+      "feature": "BILL_AMT1",
+      "mean_drop": 0.019,
+      "std": 0.0038
+    },
+    {
+      "feature": "LIMIT_BAL",
+      "mean_drop": 0.0109,
+      "std": 0.0022
+    },
+    {
+      "feature": "PAY_2",
+      "mean_drop": 0.0069,
+      "std": 0.0015
+    },
+    {
+      "feature": "PAY_6",
+      "mean_drop": 0.0062,
+      "std": 0.0016
+    },
+    {
+      "feature": "PAY_AMT3",
+      "mean_drop": 0.0061,
+      "std": 0.0017
+    },
+    {
+      "feature": "EDUCATION",
+      "mean_drop": 0.005,
+      "std": 0.0014
+    },
+    {
+      "feature": "BILL_AMT4",
+      "mean_drop": 0.0048,
+      "std": 0.002
+    }
+  ]
+}

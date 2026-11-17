@@ -1,17 +1,10 @@
 """
-Demographic Fairness and Subgroup Error Audit Module (src/fairness.py)
-ES 335: Cost-Aware Credit Card Default Prediction
-Anant Shukla (25110030) & Jay R. Glasswala (25110147)
+Compares error rates across groups (sex, education, marital status) at the
+r = 5 threshold.
 
-Responsibilities:
-- Evaluate error rates per demographic subgroup across:
-    * SEX: 1 = Male, 2 = Female
-    * EDUCATION: 1 = Grad School, 2 = University, 3 = High School, 4 = Others
-    * MARRIAGE: 1 = Married, 2 = Single, 3 = Others
-- Calculate False Alarm Rate P(y_hat=1 | y=0, g) and Missed Defaulter Rate P(y_hat=0 | y=1, g)
-- Compute 95% bootstrap confidence intervals for each group's error rates
-- Flag small subgroups (e.g. n < 100 in test set) as statistically unreliable
-- Explicitly state limitation: Group-specific thresholds are not applied
+For each group: false alarm rate P(pred=1 | y=0) and missed-defaulter rate
+P(pred=0 | y=1), with 95% bootstrap intervals. Groups with fewer than 100
+test clients are marked as unreliable. We do not use per-group thresholds.
 """
 
 import os

@@ -1,13 +1,6 @@
 """
-Artifact Export Module (src/export_artifacts.py)
-ES 335: Cost-Aware Credit Card Default Prediction
-Anant Shukla (25110030) & Jay R. Glasswala (25110147)
-
-Responsibilities:
-- Reads test predictions and test metadata
-- Formats and compresses compact static web/data/test_results.json
-- Formats web/data/metrics_summary.json for immediate web table population
-- Measures exact raw bytes and gzip bytes of test_results.json
+Writes the JSON files the website reads (web/data/test_results.json and
+web/data/metrics_summary.json) and records their size.
 """
 
 import os

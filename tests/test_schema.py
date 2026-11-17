@@ -1,7 +1,6 @@
 """
-Schema and Data Integrity Tests (tests/test_schema.py)
-ES 335: Cost-Aware Credit Card Default Prediction
-Anant Shukla (25110030) & Jay R. Glasswala (25110147)
+Checks that the raw data loads with the expected shape and that the cleaning
+step gives the numbers we expect (35 duplicates, 345 + 54 recoded rows, etc.).
 """
 
 import os

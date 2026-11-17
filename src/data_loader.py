@@ -1,20 +1,11 @@
 """
-Data Preparation Module (src/data_loader.py)
-ES 335: Cost-Aware Credit Card Default Prediction
-Anant Shukla (25110030) & Jay R. Glasswala (25110147)
+Loads and cleans the UCI credit card data, then makes the train/test split.
 
-Responsibilities:
-- Load UCI dataset from Excel/CSV
-- Drop ID column
-- Rename PAY_0 -> PAY_1 consistently
-- Rename target to 'default'
-- Remove exact duplicate rows and log count
-- Recode undocumented categories:
-    EDUCATION {0, 5, 6} -> 4 ('Others')
-    MARRIAGE {0} -> 3 ('Others')
-- Run schema assertions
-- Perform Stratified 80/20 Train/Test split (random_state=42)
-- Compute VIF and correlation matrix for BILL_AMT on training fold only
+Steps: drop the ID column, rename PAY_0 to PAY_1 and the target to 'default',
+remove the 35 exact duplicate rows, put undocumented codes into 'Others'
+(EDUCATION 0/5/6 -> 4, MARRIAGE 0 -> 3), check the schema, do a stratified
+80/20 split (random_state=42), and compute VIF / correlations of the bill
+columns on the training part only.
 """
 
 import os

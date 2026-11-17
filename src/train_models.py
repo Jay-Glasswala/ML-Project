@@ -1,7 +1,7 @@
 """
-Model Training and Hyperparameter Tuning Module (src/train_models.py)
-ES 335: Cost-Aware Credit Card Default Prediction
-Anant Shukla (25110030) & Jay R. Glasswala (25110147)
+Tunes all 8 models with stratified 5-fold CV on the training set (choosing
+by log-loss), refits the best setting of each, and saves the models and the
+test-set probabilities.
 """
 
 import os
@@ -119,7 +119,7 @@ def run_cv_tuning(X_train, y_train):
 
     print("\n--- 3. Non-Linear Models ---")
 
-    # RBF-Kernel SVM (subsampled to 6,000 for fast, scalable Platt scaling fitting)
+    # RBF SVM: too slow on all 24k rows, so we tune and fit it on a 6,000-row subsample
     subsample_idx = np.random.RandomState(42).choice(len(X_train), size=6000, replace=False)
     X_sub = X_train.iloc[subsample_idx]
     y_sub = y_train.iloc[subsample_idx]
@@ -215,68 +215,23 @@ def save_training_artifacts(best_models, tuning_results, X_train, y_train, X_tes
     print(f"   Model Weights: {models_path}")
 
 
-def get_default_models(X_train=None, y_train=None):
+def load_saved_models(output_dir):
     """
-    Return a dictionary of model pipelines with pre‑selected hyper‑parameters.
-    If ``X_train`` and ``y_train`` are provided, the pipelines are **fit**
-    on the training data so they can be used immediately for prediction.
-    This makes the “skip‑CV” path work without raising ``NotFittedError``.
+    Quick-run mode (SKIP_CV=1): reuse the CV-tuned models saved by a previous
+    full run instead of tuning again. Returns (models, tuning_results).
     """
-    from src.pipelines import build_pipeline
+    models_path = os.path.join(output_dir, 'trained_models.joblib')
+    tuning_path = os.path.join(output_dir, 'cv_tuning_results.json')
+    if not os.path.exists(models_path):
+        raise FileNotFoundError(
+            f"{models_path} not found. Run once without SKIP_CV to tune and save the models.")
+    models = joblib.load(models_path)
+    tuning_results = {}
+    if os.path.exists(tuning_path):
+        with open(tuning_path) as f:
+            tuning_results = json.load(f)
+    return models, tuning_results
 
-    # 1️⃣ Baseline – majority class (DummyClassifier)
-    dummy = build_pipeline(DummyClassifier(strategy='most_frequent'))
-
-    # 2️⃣ Plain Logistic (unregularised)
-    plain_logistic = build_pipeline(
-        LogisticRegression(penalty=None, max_iter=500, random_state=42)
-    )
-
-    # 3️⃣ Ridge (L2) – best CV‑found C=1.0
-    ridge = build_pipeline(
-        LogisticRegression(penalty='l2', C=1.0, max_iter=500, random_state=42)
-    )
-
-    # 4️⃣ Lasso (L1) – best CV‑found C=0.1 (using fast liblinear solver)
-    lasso = build_pipeline(
-        LogisticRegression(penalty='l1', C=0.1, solver='liblinear',
-                           max_iter=200, random_state=42)
-    )
-
-    # 5️⃣ RBF‑SVM – best CV‑found C=1.0, gamma='scale'
-    svm = build_pipeline(
-        SVC(C=1.0, gamma='scale', probability=True, random_state=42)
-    )
-
-    # 6️⃣ Random Forest – best CV‑found n_estimators=150, max_depth=10
-    rf = build_pipeline(
-        RandomForestClassifier(n_estimators=150, max_depth=10,
-                               random_state=42, n_jobs=-1)
-    )
-
-    # 7️⃣ HistGradientBoosting – best CV‑found lr=0.05, max_iter=100
-    hgb = build_pipeline(
-        HistGradientBoostingClassifier(learning_rate=0.05,
-                                       max_iter=100,
-                                       random_state=42)
-    )
-
-    models = {
-        'majority_class': dummy,
-        'plain_logistic': plain_logistic,
-        'ridge_logistic': ridge,
-        'lasso_logistic': lasso,
-        'rbf_svm': svm,
-        'random_forest': rf,
-        'hist_gradient_boosting': hgb,
-    }
-
-    if X_train is not None and y_train is not None:
-        print("Fitting default models on training data …")
-        for name, pipe in models.items():
-            pipe.fit(X_train, y_train)
-
-    return models
 
 if __name__ == '__main__':
     processed_dir = os.path.join(os.path.dirname(__file__), '..', 'data', 'processed')

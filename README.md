@@ -1,150 +1,196 @@
 # Cost-Aware Credit Card Default Prediction
-**ES 335: Machine Learning Course Project**  
-**Indian Institute of Technology (IIT)** &bull; **Fall 2026**
+**ES 335 Machine Learning – Course Project**  
+IIT Gandhinagar, Fall 2026
 
-[![Tests](https://img.shields.io/badge/pytest-passing-success.svg)](#)
-[![Python](https://img.shields.io/badge/python-3.10%20%7C%203.11%20%7C%203.14-blue.svg)](#)
-[![License: CC BY 4.0](https://img.shields.io/badge/Dataset-CC%20BY%204.0-lightgrey.svg)](https://archive.ics.uci.edu/dataset/350/default+of+credit+card+clients)
-[![GitHub Pages](https://img.shields.io/badge/Interactive%20Site-GitHub%20Pages-teal.svg)](https://Jay-Glasswala.github.io/ML-Project/)
+Website: https://Jay-Glasswala.github.io/ML-Project/  
+Dataset: [UCI Default of Credit Card Clients](https://archive.ics.uci.edu/dataset/350/default+of+credit+card+clients) (CC BY 4.0)
 
 ---
 
-## Project Overview
+## What this project is about
 
-In consumer lending, predicting client default is characterized by two fundamental properties:
-1. **Severe Class Imbalance:** Defaulters comprise only $\approx 22.1\%$ of clients. A naive majority-class rule scores **$77.9\%$ accuracy** while catching $0$ defaulters, which is economically disastrous.
-2. **Asymmetric Decision Costs:** Missing a defaulter (False Negative) loses the entire unpaid loan balance, while a false alarm (False Positive) causes minor operational friction.
+We use the UCI credit card dataset (about 30,000 clients from Taiwan, 2005) to predict whether a client will default on their next payment. Two things make this harder than a normal classification problem:
 
-Under Bayes decision theory, the optimal decision threshold is:
-$$t^* = \frac{c_{FP}}{c_{FP} + c_{FN}} = \frac{1}{1 + r}, \quad \text{where } r = \frac{c_{FN}}{c_{FP}}$$
+1. **The classes are imbalanced.** Only about 22% of clients default. If you just predict "no default" for everyone, you get 77.9% accuracy but you catch zero defaulters. So accuracy is not a good metric here.
+2. **The two mistakes don't cost the same.** If the bank misses a defaulter it loses the unpaid balance, but a false alarm only costs a bit of extra checking.
 
-When missing a defaulter is $5\times$ more costly than a false alarm ($r = 5$), the optimal decision threshold shifts from the standard $0.50$ down to **$t^* \approx 0.167$**. This project designs an end-to-end, leak-free machine learning system to predict calibrated probabilities, minimize financial loss under asymmetric costs, compare regularizer behavior under extreme collinearity, and audit demographic disparities.
+If the cost of a missed defaulter is $r$ times the cost of a false alarm, and the model's probabilities are calibrated, the best threshold is
+
+$$t^* = \frac{c_{FP}}{c_{FP} + c_{FN}} = \frac{1}{1 + r}$$
+
+So for $r = 5$ we should flag a client when $p \ge 0.167$, not 0.5.
+
+In this project we:
+* train and compare 8 models without leaking test data,
+* check whether their probabilities are calibrated,
+* pick thresholds using the cost ratio,
+* look at how Ridge and Lasso handle the six bill-amount columns (which are very correlated),
+* check whether error rates are different across sex, education and marital status.
 
 ---
 
-## Team Members & Responsibilities
+## Team
 
-| Student Name | Roll Number | Primary Core Responsibilities |
+| Name | Roll No. | What they worked on |
 | :--- | :---: | :--- |
-| **Jay R. Glasswala** | `25110147` | Non-linear margin & ensemble modeling (Random Forest, HistGradientBoosting, RBF-SVM with Platt scaling), 5-fold cross-validation tuning, probability calibration & equal-frequency quantile ECE implementation, Bayes cost threshold optimization ($t^* = \frac{1}{1+r}$), paired bootstrap hypothesis testing, and GitHub Pages deployment. |
-| **Anant Shukla** | `25110030` | Baseline and linear model family (majority class, plain, Ridge, Lasso and Elastic-Net logistic regression): cross-validated tuning and coefficient analysis under collinearity (VIF, correlation structure, L1 vs. L2 behavior on the six bill columns); leakage-free scikit-learn `Pipeline` preprocessing (scaling and encoding fit on training folds only, protected attributes excluded); data ingestion, duplicate removal (35 rows) and categorical recoding; subgroup demographic fairness audit; and automated `pytest` test suite. |
+| **Jay R. Glasswala** | `25110147` | The non-linear models (Random Forest, HistGradientBoosting, RBF-SVM with Platt scaling), 5-fold CV tuning, calibration and the quantile ECE metric, the cost threshold $t^* = 1/(1+r)$, the paired bootstrap test, and the GitHub Pages site. |
+| **Anant Shukla** | `25110030` | The baseline and linear models (majority class, plain, Ridge, Lasso and Elastic-Net logistic regression), their CV tuning and the coefficient analysis on the correlated bill columns (VIF, correlations, L1 vs. L2); the leakage-free preprocessing `Pipeline` (scaling and encoding fit only on training folds, SEX and MARRIAGE left out); loading the data, removing the 35 duplicates and recoding bad category codes; the fairness audit; and the `pytest` tests. |
 
-*Both team members contributed equally to project discussions, reviewed all code, and can reproduce and defend every result end-to-end.*
+We both took part in the discussions, reviewed each other's code, and can run and explain every result.
 
 ---
 
-## Key Empirical Findings
+## Results
 
-All models were tuned via **Stratified 5-Fold Cross-Validation** on the training partition ($N=23,972$) and evaluated once on the sealed held-out test partition ($N=5,993$). Decision thresholds are not tuned on data: each cost ratio $r$ uses the Bayes rule $t^* = 1/(1+r)$, which is valid because the selected models are well calibrated (quantile ECE $\approx 0.01$ for the ensembles). The final RBF-SVM grid was $(C, \gamma) \in \{(1, \text{scale}), (1, 0.05), (5, \text{scale})\}$ on a stratified 6,000-row subsample, narrowed from the proposal grid for runtime. $95\%$ Confidence Intervals are computed via **1,000 stratified bootstrap resamples**.
+We tuned every model with stratified 5-fold cross-validation on the training set (23,972 clients) and then scored each one once on the test set (5,993 clients). We didn't tune the threshold on data; we just used $t^* = 1/(1+r)$, which works because the best models are well calibrated (ECE around 0.01). For the SVM we only tried three settings, $(C, \gamma) \in \{(1, \text{scale}), (1, 0.05), (5, \text{scale})\}$, on a 6,000-row subsample, because it was too slow on the full data. The 95% confidence intervals come from 1,000 bootstrap resamples of the test set.
 
-| Model Architecture | PR-AUC [95% CI] | Log-Loss [95% CI] | Brier Score | ECE (Quantile) | Expected Cost @ $r=5$ [95% CI] | Recall @ $P \ge 0.50$ |
+| Model | PR-AUC [95% CI] | Log-Loss [95% CI] | Brier | ECE | Cost at $r=5$ [95% CI] | Recall at Precision ≥ 0.5 |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
-| **HistGradientBoosting (Best)** | **0.5548** [0.528, 0.583] | **0.4328** [0.417, 0.447] | **0.1360** | **0.0114** | **0.5648** [0.534, 0.594] | **55.7%** |
-| **Random Forest** | 0.5503 [0.524, 0.580] | 0.4346 [0.419, 0.449] | 0.1363 | 0.0097 | 0.5810 [0.550, 0.613] | 56.7% |
-| **RBF-Kernel SVM (Platt)** | 0.4934 [0.465, 0.523] | 0.4614 [0.445, 0.477] | 0.1441 | 0.0290 | 0.6888 [0.648, 0.728] | 45.3% |
-| **Elastic-Net Logistic** | 0.5037 [0.475, 0.534] | 0.4670 [0.451, 0.482] | 0.1456 | 0.0516 | 0.6980 [0.670, 0.725] | 50.9% |
-| **Ridge Logistic (L2)** | 0.5034 [0.475, 0.533] | 0.4671 [0.451, 0.482] | 0.1456 | 0.0514 | 0.6993 [0.671, 0.727] | 50.7% |
-| **Lasso Logistic (L1)** | 0.5035 [0.475, 0.534] | 0.4671 [0.451, 0.482] | 0.1456 | 0.0518 | 0.6998 [0.672, 0.728] | 50.8% |
-| **Plain Logistic (Reference)** | 0.5034 [0.475, 0.533] | 0.4672 [0.451, 0.482] | 0.1456 | 0.0520 | 0.7022 [0.674, 0.730] | 50.7% |
-| **Majority Class (Baseline)** | 0.2213 [0.211, 0.232] | 7.9750 | 0.2213 | 0.2213 | 1.1063 [1.054, 1.162] | 0.0% |
+| **HistGradientBoosting (best)** | **0.5548** [0.528, 0.583] | **0.4328** [0.417, 0.447] | **0.1360** | **0.0114** | **0.5648** [0.534, 0.594] | **55.7%** |
+| Random Forest | 0.5503 [0.524, 0.580] | 0.4346 [0.419, 0.449] | 0.1363 | 0.0097 | 0.5810 [0.550, 0.613] | 56.7% |
+| RBF-Kernel SVM (Platt) | 0.4934 [0.465, 0.523] | 0.4614 [0.445, 0.477] | 0.1441 | 0.0290 | 0.6888 [0.648, 0.728] | 45.3% |
+| Elastic-Net Logistic | 0.5037 [0.475, 0.534] | 0.4670 [0.451, 0.482] | 0.1456 | 0.0516 | 0.6980 [0.670, 0.725] | 50.9% |
+| Ridge Logistic (L2) | 0.5034 [0.475, 0.533] | 0.4671 [0.451, 0.482] | 0.1456 | 0.0514 | 0.6993 [0.671, 0.727] | 50.7% |
+| Lasso Logistic (L1) | 0.5035 [0.475, 0.534] | 0.4671 [0.451, 0.482] | 0.1456 | 0.0518 | 0.6998 [0.672, 0.728] | 50.8% |
+| Plain Logistic | 0.5034 [0.475, 0.533] | 0.4672 [0.451, 0.482] | 0.1456 | 0.0520 | 0.7022 [0.674, 0.730] | 50.7% |
+| Majority Class (baseline) | 0.2213 [0.211, 0.232] | 7.9750 | 0.2213 | 0.2213 | 1.1063 [1.054, 1.162] | 0.0% |
 
-### Paired Bootstrap Hypothesis Testing
-* **$\Delta$ PR-AUC (HistGradientBoosting vs. Plain Logistic):** $+0.0514$ ($95\%$ CI: `[+0.0353, +0.0685]`). Because the confidence interval strictly excludes zero, the non-linear ensemble delivers a statistically significant improvement over linear baselines.
-* **$\Delta$ Expected Cost ($r=5$):** $-0.1374\,c_{FP}$ ($95\%$ CI: `[-0.1699, -0.1065]`). Demonstrates a statistically significant cost reduction per client.
+Cost is per client, in units of the cost of one false alarm.
 
-### Collinearity Analysis & Regularizer Behavior
-Variance Inflation Factor (VIF) on training fold data:
-* `BILL_AMT1`: $11.49$ &bull; `BILL_AMT2`: $17.08$ &bull; `BILL_AMT3`: $10.33$
-* `BILL_AMT4`: $13.76$ &bull; `BILL_AMT5`: $16.03$ &bull; `BILL_AMT6`: $9.97$
-* Adjacent-month bill correlations reach $r = 0.955$.
-* Fitted bill-amount coefficients (standardized features, CV-selected penalties):
+**Is the best model really better than plain logistic regression?** We compared them on the same 1,000 bootstrap samples:
+* PR-AUC difference: +0.0514 (95% CI [+0.0353, +0.0685])
+* Cost difference at $r=5$: −0.1374 per client (95% CI [−0.1699, −0.1065])
+
+Both intervals don't include zero, so the difference is significant.
+
+### The six bill columns (collinearity)
+
+The bill amounts for neighbouring months are very similar (correlation up to 0.955), and the VIFs on the training data are high:
+
+`BILL_AMT1` 11.49 · `BILL_AMT2` 17.08 · `BILL_AMT3` 10.33 · `BILL_AMT4` 13.76 · `BILL_AMT5` 16.03 · `BILL_AMT6` 9.97
+
+These are the bill-column weights of our fitted linear models (features are standardized, penalties chosen by CV):
 
 | Model | `BILL_AMT1` | `BILL_AMT2` | `BILL_AMT3` | `BILL_AMT4` | `BILL_AMT5` | `BILL_AMT6` |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
 | Plain Logistic | −0.469 | +0.304 | −0.030 | −0.005 | +0.033 | +0.064 |
 | Ridge ($C=0.1$) | −0.416 | +0.237 | −0.008 | −0.016 | +0.025 | +0.074 |
 | Lasso ($C=1.0$) | −0.442 | +0.258 | −0.005 | **0** | +0.020 | +0.066 |
-| Elastic-Net ($C=0.1$, $\ell_1$ ratio $=0.5$) | −0.348 | +0.156 | **0** | **0** | +0.018 | +0.067 |
+| Elastic-Net ($C=0.1$, l1_ratio $=0.5$) | −0.348 | +0.156 | **0** | **0** | +0.018 | +0.067 |
 
-* **Interpretation:** In every linear model, `BILL_AMT1` and `BILL_AMT2` receive large weights of *opposite sign*, a classic collinearity signature: the model effectively uses the month-over-month change in balance rather than either level. Ridge pulls these two weights toward each other but keeps all six months. Cross-validation selected only a weak Lasso penalty ($C=1.0$), so Lasso zeroes just `BILL_AMT4`; Elastic-Net zeroes `BILL_AMT3` and `BILL_AMT4`. Stronger L1 penalties drive more months to zero (see the regularization paths in `notebooks/eda_and_collinearity.ipynb`), but at the CV-optimal strength all four linear models reach virtually identical test PR-AUC ($\approx 0.503$), so regularization changes the coefficients far more than the predictions.
+What we noticed:
+* In every model `BILL_AMT1` gets a big negative weight and `BILL_AMT2` a big positive one. Because the two columns are almost the same, the model is basically using the *change* in balance from August to September.
+* Ridge pulls these two weights closer together but keeps all six months.
+* CV picked a weak penalty for Lasso ($C=1.0$), so it only set `BILL_AMT4` to zero. Elastic-Net set `BILL_AMT3` and `BILL_AMT4` to zero.
+* All four linear models got almost the same PR-AUC (about 0.503). So regularization changed the weights a lot but the predictions hardly at all.
 
----
+To check which of these weights we can actually trust, we refit the models on 100 bootstrap samples of the training data (`src/robustness_checks.py`):
 
-## Subgroup Demographic Fairness Audit
+| Column | Ridge $C=0.1$: mean weight [95% range] | Ridge: % of refits positive | Lasso $C=1.0$: % of refits at zero | Lasso $C=0.01$: % of refits at zero |
+| :--- | :---: | :---: | :---: | :---: |
+| `BILL_AMT1` | -0.405 [-0.60, -0.25] | 0% | 0% | 0% |
+| `BILL_AMT2` | +0.212 [-0.02, +0.47] | 94% | 3% | 100% |
+| `BILL_AMT3` | +0.000 [-0.23, +0.20] | 52% | 12% | 97% |
+| `BILL_AMT4` | -0.011 [-0.19, +0.16] | 47% | 5% | 100% |
+| `BILL_AMT5` | +0.034 [-0.21, +0.27] | 61% | 9% | 100% |
+| `BILL_AMT6` | +0.069 [-0.09, +0.26] | 78% | 5% | 100% |
 
-Protected attributes (`SEX`, `MARRIAGE`) were **strictly excluded** from model inputs $X$. At threshold $t^* \approx 0.167$ ($r=5$), test set error rates were audited:
-* **By Sex:**
-  * Male ($N=2,332$): False Alarm Rate $= 34.3\%$ [$32.2\%, 36.4\%$] &bull; Missed Defaulters $= 29.5\%$ [$25.9\%, 33.5\%$]
-  * Female ($N=3,661$): False Alarm Rate $= 32.4\%$ [$30.7\%, 34.0\%$] &bull; Missed Defaulters $= 26.4\%$ [$23.4\%, 29.6\%$]
-* **By Education:**
-  * Graduate School ($N=2,090$): False Alarm Rate $= 29.8\%$ &bull; Missed Defaulters $= 34.7\%$
-  * University ($N=2,769$): False Alarm Rate $= 35.9\%$ &bull; Missed Defaulters $= 23.8\%$
-  * High School ($N=1,044$): False Alarm Rate $= 35.6\%$ &bull; Missed Defaulters $= 26.9\%$
-  * Others ($N=90$): Flagged as statistically unreliable ($N < 100$).
-* **Policy Note:** Group-specific decision thresholds are deliberately *not* used to avoid explicit disparate treatment.
+The `BILL_AMT1` and `BILL_AMT2` weights are stable. `BILL_AMT3` to `BILL_AMT5` flip sign in about half the refits, so we shouldn't read anything into them. With a strong L1 penalty ($C=0.01$), Lasso keeps only `BILL_AMT1` almost every time, which is what we expected from Lasso, but CV preferred the weaker penalty because the other months still help log-loss a little.
 
----
+### Threshold and class weight checks
 
-## Interactive Web Application (GitHub Pages)
-
-The project includes a static, zero-backend interactive web application hosted on GitHub Pages:
-* **Interactive Tool 1 (Cost-Ratio Slider):** Dragging the slider ($r \in [1, 10]$) recalculates $t^* = 1/(1+r)$ and re-evaluates all 5,993 test records in JavaScript in **$< 4\text{ ms}$**, live-updating the 2x2 confusion matrix, expected cost, and trade-off cards.
-* **Interactive Tool 2 (Fairness Auditor):** Dynamically filters and displays error rates across demographic groups with error bars.
-* **Performance Benchmark:** `web/data/test_results.json` is compressed to **105.9 KB (gzip)**, enabling sub-100 ms initial load times worldwide.
-
----
-
-## Data Access Instructions & Provenance
-
-* **Dataset:** Default of Credit Card Clients Dataset
-* **Source:** UCI Machine Learning Repository (Yeh and Lien, 2009)
-* **Direct Access URL:** [https://archive.ics.uci.edu/dataset/350/default+of+credit+card+clients](https://archive.ics.uci.edu/dataset/350/default+of+credit+card+clients)
-* **License:** Creative Commons Attribution 4.0 International (CC BY 4.0)
-* **Automated Retrieval:** Running `python run_all.py` or `python src/data_loader.py` automatically checks for `data/raw/default of credit card clients.xls` and downloads/unpacks it if not present.
-* **Unit of Observation:** Each row represents one individual credit card client at a Taiwanese commercial bank between April 2005 and September 2005, predicting whether they defaulted on their payment in October 2005.
+Both checks only use out-of-fold predictions on the training set (`src/robustness_checks.py`), so the test set isn't touched.
+* **Does the formula give the right threshold?** For HistGradientBoosting, the threshold with the lowest cost was 0.17 for $r=5$ (formula: 0.167), 0.09 for $r=10$ (formula: 0.091) and 0.36 for $r=2$ (formula: 0.333). Using the formula instead cost less than 0.002 extra per client in every case.
+* **Class weights vs. moving the threshold:** We also tried `class_weight='balanced'`. For HistGradientBoosting, the average predicted probability went up from 0.22 to 0.42 (the real default rate is 0.22) and ECE went from 0.006 to 0.196, so the probabilities were no longer calibrated. At $r=5$ the normal model with $t^*$ cost 0.544 per client, and the weighted model at threshold 0.5 cost 0.566. For Ridge it went the other way: the weighted model at 0.5 was cheaper (0.620 vs. 0.694), but its ECE was 0.235. We kept the normal models because our best model does better that way, and because calibrated probabilities let us use the formula for any $r$.
 
 ---
 
-## How to Reproduce
+## Error analysis
 
-### 1. Clone the repository
+We looked at the mistakes HistGradientBoosting makes on the test set at $t^* = 0.167$ (`src/error_analysis.py`, results saved in `data/processed/error_analysis.json`):
+
+| Group | N | Late in Sep. | Avg. months late (out of 6) | Median credit limit (NT$) | Median Sep. bill / limit |
+| :--- | :---: | :---: | :---: | :---: | :---: |
+| Caught defaulters (TP) | 958 | 68% | 2.74 | 80,000 | 0.48 |
+| False alarms (FP) | 1545 | 39% | 1.39 | 90,000 | 0.12 |
+| Missed defaulters (FN) | 368 | 3% | 0.10 | 150,000 | 0.55 |
+| Correct non-defaulters (TN) | 3122 | 2% | 0.07 | 180,000 | 0.28 |
+
+* **False alarms:** 39% of them were late in September and then paid anyway. The model leans very heavily on September's repayment status (`PAY_1`): shuffling it drops PR-AUC by 0.205, while the next most important feature only drops it by 0.019. So one recent delay is enough to push a client over the low threshold.
+* **Missed defaulters:** 91% of them were never late in any of the six months. They have higher limits than the defaulters we catch and use more of their limit than the good clients, but nothing in their payment history really stands out. We think these misses are a limit of the data, not something more tuning would fix.
+
+---
+
+## Fairness check
+
+SEX and MARRIAGE were not given to the model. We only used them afterwards to compare error rates. At $t^* \approx 0.167$ ($r=5$) on the test set:
+* **By sex:**
+  * Male (N = 2,332): false alarm rate 34.3% [32.2%, 36.4%], missed defaulters 29.5% [25.9%, 33.5%]
+  * Female (N = 3,661): false alarm rate 32.4% [30.7%, 34.0%], missed defaulters 26.4% [23.4%, 29.6%]
+* **By education:**
+  * Graduate school (N = 2,090): false alarm rate 29.8%, missed defaulters 34.7%
+  * University (N = 2,769): false alarm rate 35.9%, missed defaulters 23.8%
+  * High school (N = 1,044): false alarm rate 35.6%, missed defaulters 26.9%
+  * Others (N = 90): too few clients to say anything reliable.
+
+We decided not to use different thresholds for different groups, since that would mean treating people differently based on a protected attribute.
+
+---
+
+## Website
+
+The website is a static page on GitHub Pages (no backend). It has two interactive parts:
+* **Cost slider:** you pick a model and a cost ratio $r$ from 1 to 10. The page computes $t^* = 1/(1+r)$, re-scores all 5,993 test clients in the browser, and updates the confusion matrix, cost and recall.
+* **Fairness view:** shows false alarm and missed-defaulter rates for each sex, education or marital-status group at the current threshold.
+
+It reads the saved test predictions from `web/data/test_results.json` (about 106 KB gzipped).
+
+---
+
+## Data
+
+* **Dataset:** Default of Credit Card Clients, UCI Machine Learning Repository (Yeh and Lien, 2009)
+* **Link:** https://archive.ics.uci.edu/dataset/350/default+of+credit+card+clients
+* **License:** CC BY 4.0
+* **Getting the data:** `python run_all.py` (or `python src/data_loader.py`) looks for `data/raw/default of credit card clients.xls` and downloads it if it isn't there. If the download fails, download the `.xls` from the link above and put it in `data/raw/` yourself.
+* **One row** = one credit card client at a Taiwanese bank. The inputs cover April to September 2005, and the target is whether they defaulted in October 2005.
+
+---
+
+## How to run it
+
 ```bash
+# 1. Get the code
 git clone https://github.com/Jay-Glasswala/ML-Project.git
 cd ML-Project
-```
 
-### 2. Install dependencies
-```bash
+# 2. Install the packages
 pip install -r requirements.txt
-```
 
-### 3. Run automated unit & leakage tests
-```bash
+# 3. Run the tests (data checks and leakage checks)
 pytest -v
-```
 
-### 4. Execute the complete end-to-end pipeline
-```bash
-python run_all.py
-```
+# 4. Run everything
+python run_all.py            # full run, including CV tuning
+SKIP_CV=1 python run_all.py  # faster: reuse the models saved by the last full run
 
-### 5. Launch local static web preview
-```bash
+# 5. Look at the website locally
 cd web
-python -m http.server 8000
-# Open http://localhost:8000 in your browser
+python -m http.server 8000   # then open http://localhost:8000
 ```
+
+You can also run the error analysis and robustness checks on their own with `python -m src.error_analysis` and `python -m src.robustness_checks`.
 
 ---
 
-## Responsible AI Disclosure
+## Use of AI tools
 
-In accordance with course academic integrity guidelines:
-* **Website Frontend & Visualization:** Generative AI tools (Claude, Gemini, ChatGPT) were used to assist in building the static web presentation (HTML layout, CSS styling, Chart.js integrations, and event handlers for the interactive cost simulator), as the course focuses on evaluating machine learning understanding and reasoning rather than front-end web development.
-* **Machine Learning Coding Assistance:** AI was utilized for programming assistance on standard ML tasks, including suggesting sensible hyperparameter search ranges during cross-validation, providing syntax boilerplate for Scikit-Learn `ColumnTransformer` pipelines, optimizing NumPy array vectorization for the bootstrap resampling loops, and debugging model convergence warnings.
-* **Independent Verification & Reasoning:** All core ML decisions—problem formulation, mathematical derivation of the Bayes optimal threshold $t^* = \frac{1}{1+r}$, data cleaning logic (detecting the 35 duplicate client rows and recoding undocumented values), model comparisons, quantile ECE implementation, error analysis, and conclusions—were independently conceptualized, executed, verified, and defended by the project team (Jay Glasswala and Anant Shukla).
-* **Results Audit:** Claude (Anthropic) was used to cross-check the README and website figures against the generated metrics files and the fitted model coefficients; the collinearity discussion and results table were corrected to match the actual outputs.
-* **Zero Private Data / Credentials:** No private credentials, API keys, or proprietary data are present. All artifacts originate from the public UCI Machine Learning Repository.
+As the course rules require, here is how we used AI tools:
+* **Website:** We used AI tools (Claude, Gemini, ChatGPT) to help build the website (HTML layout, CSS, the Chart.js charts and the slider code). The course is about the ML, not web development, so we focused our own effort there.
+* **ML code:** We used AI for help with standard coding tasks: suggesting hyperparameter ranges, `ColumnTransformer` pipeline boilerplate, speeding up the bootstrap loops with NumPy, and fixing convergence warnings.
+* **Our decisions:** The problem setup, the derivation of $t^* = 1/(1+r)$, the data cleaning choices (finding the 35 duplicates, recoding the undocumented codes), the model comparisons, the quantile ECE and the conclusions were our decisions. We checked the results and can explain them.
+* **Results check and extra analysis:** We used Claude (Anthropic) to cross-check the README and website against our output files, to write `src/error_analysis.py` and `src/robustness_checks.py`, and to rewrite the error analysis, calibration and collinearity text from their outputs. It also helped rewrite the README and website in simpler language. We reviewed these results ourselves.
+* **No private data:** There are no passwords, API keys or private data in this repo. All data comes from the public UCI repository.
 
 ---
 
@@ -156,10 +202,10 @@ In accordance with course academic integrity guidelines:
 
 **Methods**
 * Platt, J. (1999). Probabilistic outputs for support vector machines and comparisons to regularized likelihood methods. *Advances in Large Margin Classifiers*, 61–74.
-* Elkan, C. (2001). The foundations of cost-sensitive learning. *Proceedings of IJCAI 2001*, 973–978. (Bayes cost-optimal threshold)
+* Elkan, C. (2001). The foundations of cost-sensitive learning. *Proceedings of IJCAI 2001*, 973–978. (cost-based threshold)
 * Zou, H., & Hastie, T. (2005). Regularization and variable selection via the elastic net. *Journal of the Royal Statistical Society: Series B, 67*(2), 301–320.
 
 **Software**
 * Pedregosa, F., et al. (2011). Scikit-learn: Machine learning in Python. *Journal of Machine Learning Research, 12*, 2825–2830.
 * NumPy, pandas, SciPy, Matplotlib and pytest (versions in `requirements.txt`).
-* Chart.js (https://www.chartjs.org, MIT License) and MathJax 3 (https://www.mathjax.org, Apache 2.0) for the website, loaded from the jsDelivr CDN.
+* Chart.js (https://www.chartjs.org, MIT License) and MathJax 3 (https://www.mathjax.org, Apache 2.0), loaded from the jsDelivr CDN.

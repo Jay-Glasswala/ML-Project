@@ -1,15 +1,15 @@
 """
-Master Execution Script (run_all.py)
-ES 335: Cost-Aware Credit Card Default Prediction
-Anant Shukla (25110030) & Jay R. Glasswala (25110147)
+Runs the whole project from start to finish:
 
-Executes the entire reproducible workflow:
-1. Data loading, cleaning, recoding, and 80/20 train/test splitting
-2. Automated schema and leakage test verification (pytest)
-3. 5-Fold Stratified CV tuning & fitting of all models
-4. Full test set evaluation, bootstrap CIs, and paired hypothesis testing
-5. Demographic fairness error disparity auditing
-6. Export of optimized web artifacts for static GitHub Pages site
+1. load and clean the data, make the 80/20 split
+2. run the pytest checks
+3. tune and fit all models with 5-fold CV
+4. evaluate on the test set (with bootstrap intervals)
+5. fairness check
+6. error analysis and extra checks (threshold, class weights, coefficient stability)
+7. export the data for the website
+
+Set SKIP_CV=1 to reuse the models saved by the last full run instead of re-tuning.
 """
 
 import os
@@ -29,7 +29,7 @@ def main():
     project_root = os.path.dirname(os.path.abspath(__file__))
 
     # Step 1: Data Preparation
-    print("\n[Step 1/6] Running Data Preparation (src/data_loader.py)...")
+    print("\n[Step 1/7] Running Data Preparation (src/data_loader.py)...")
     from src.data_loader import load_raw_data, clean_and_prepare_data, split_and_save_data
     raw_df = load_raw_data()
     clean_df, audit = clean_and_prepare_data(raw_df)
@@ -37,41 +37,47 @@ def main():
     train_df, test_df, _ = split_and_save_data(clean_df, audit, output_dir=processed_dir)
 
     # Step 2: Automated Tests
-    print("\n[Step 2/6] Running Automated Unit & Leakage Tests (pytest)...")
+    print("\n[Step 2/7] Running Automated Unit & Leakage Tests (pytest)...")
     res = subprocess.run([sys.executable, '-m', 'pytest', '-v', os.path.join(project_root, 'tests')], cwd=project_root)
     if res.returncode != 0:
         print("ERROR: Test suite failed! Halting pipeline.")
         sys.exit(1)
     print("All tests passed cleanly!")
 
-    # Step 3: Model Training – optionally skip CV
-    print("\n[Step 3/6] Running Model Training")
+    # Step 3: Model Training (SKIP_CV=1 reuses the saved CV-tuned models)
+    print("\n[Step 3/7] Running Model Training")
     from src.pipelines import prepare_dataset_splits
-    from src.train_models import run_cv_tuning, save_training_artifacts, get_default_models
+    from src.train_models import run_cv_tuning, save_training_artifacts, load_saved_models
     X_train, y_train, X_test, y_test, _, _ = prepare_dataset_splits(train_df, test_df)
 
     if os.getenv('SKIP_CV') == '1':
-        print('Skipping CV tuning (SKIP_CV=1); using default models.')
-        models = get_default_models(X_train, y_train)
-        tuning_res = {}
+        print('SKIP_CV=1: loading saved CV-tuned models instead of re-tuning.')
+        models, tuning_res = load_saved_models(processed_dir)
     else:
         models, tuning_res = run_cv_tuning(X_train, y_train)
 
     save_training_artifacts(models, tuning_res, X_train, y_train, X_test, y_test, processed_dir)
 
     # Step 4: Model Evaluation
-    print("\n[Step 4/6] Running Full Test Evaluation & Bootstrap CIs (src/evaluate.py)...")
+    print("\n[Step 4/7] Running Full Test Evaluation & Bootstrap CIs (src/evaluate.py)...")
     from src.evaluate import full_evaluation
     preds_file = os.path.join(processed_dir, 'test_predictions.json')
     full_evaluation(preds_file, processed_dir)
 
     # Step 5: Fairness Audit
-    print("\n[Step 5/6] Running Subgroup Demographic Fairness Audit (src/fairness.py)...")
+    print("\n[Step 5/7] Running Subgroup Demographic Fairness Audit (src/fairness.py)...")
     from src.fairness import run_fairness_audit
     run_fairness_audit(processed_dir)
 
-    # Step 6: Export Web Artifacts
-    print("\n[Step 6/6] Exporting Web Artifacts for GitHub Pages (src/export_artifacts.py)...")
+    # Step 6: Error analysis and robustness checks
+    print("\n[Step 6/7] Error Analysis & Robustness Checks...")
+    from src.error_analysis import run_error_analysis
+    from src.robustness_checks import run_robustness_checks
+    run_error_analysis(processed_dir)
+    run_robustness_checks(processed_dir)
+
+    # Step 7: Export Web Artifacts
+    print("\n[Step 7/7] Exporting Web Artifacts for GitHub Pages (src/export_artifacts.py)...")
     from src.export_artifacts import export_web_artifacts
     import shutil
     web_dir = os.path.join(project_root, 'web')
@@ -85,8 +91,7 @@ def main():
 
     elapsed = time.time() - start_time
     print("\n" + "=" * 70)
-    print(f"  PIPELINE COMPLETE in {elapsed:.1f} seconds!")
-    print("  Ready for GitHub Pages deployment & evaluation.")
+    print(f"  Pipeline finished in {elapsed:.1f} seconds!")
     print("=" * 70)
 
 

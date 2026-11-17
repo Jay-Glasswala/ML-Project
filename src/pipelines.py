@@ -1,13 +1,9 @@
 """
-Pipeline Engineering Module (src/pipelines.py)
-ES 335: Cost-Aware Credit Card Default Prediction
-Anant Shukla (25110030) & Jay R. Glasswala (25110147)
+Feature lists and the preprocessing pipeline.
 
-Responsibilities:
-- Build ColumnTransformer that standardizes numeric continuous variables
-  and one-hot encodes categorical variables.
-- Strictly exclude SEX and MARRIAGE from training features X.
-- Enclose all transformers inside scikit-learn Pipeline objects to prevent test leakage.
+Numeric columns are standardized and EDUCATION is one-hot encoded. SEX and
+MARRIAGE are left out of X on purpose. Everything is wrapped in a sklearn
+Pipeline so the scaler/encoder are only fit on training folds.
 """
 
 import pandas as pd
@@ -16,7 +12,7 @@ from sklearn.preprocessing import StandardScaler, OneHotEncoder
 from sklearn.pipeline import Pipeline
 
 
-# Protected/audit attributes (strictly excluded from training feature matrix X)
+# Only used for the fairness check, never as model inputs
 PROTECTED_ATTRIBUTES = ['SEX', 'MARRIAGE']
 
 # Numeric continuous and ordinal features to be standardized
@@ -45,7 +41,7 @@ def get_preprocessor():
             ('num', numeric_transformer, NUMERIC_FEATURES),
             ('cat', categorical_transformer, CATEGORICAL_FEATURES)
         ],
-        remainder='drop'  # Safely drops any unlisted columns
+        remainder='drop'  # any other column is dropped
     )
     return preprocessor
 
