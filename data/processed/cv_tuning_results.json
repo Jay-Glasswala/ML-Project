@@ -6,14 +6,14 @@
   },
   "plain_logistic": {
     "best_params": {},
-    "cv_log_loss": 0.4659462050988344,
-    "cv_log_loss_std": 0.004545705096358574
+    "cv_log_loss": 0.4659462050988735,
+    "cv_log_loss_std": 0.004545705096365703
   },
   "ridge_logistic": {
     "best_params": {
       "C": 0.1
     },
-    "cv_log_loss": 0.46591295120009024
+    "cv_log_loss": 0.4659129512000889
   },
   "lasso_logistic": {
     "best_params": {
@@ -34,14 +34,14 @@
       "gamma": "0.05",
       "subsample_size": 6000
     },
-    "cv_log_loss": 0.4509902596473586
+    "cv_log_loss": 0.45098600768935554
   },
   "random_forest": {
     "best_params": {
       "n_estimators": 150,
       "max_depth": 10
     },
-    "cv_log_loss": 0.4278885023659547
+    "cv_log_loss": 0.42788287915750817
   },
   "hist_gradient_boosting": {
     "best_params": {
