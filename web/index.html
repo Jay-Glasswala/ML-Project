@@ -887,16 +887,25 @@ python -m http.server 8000</code></pre>
         <div>
           <h4>Use of AI tools and citations</h4>
           <p>
-            <strong>Website:</strong> We used AI tools (Claude, Gemini, ChatGPT) to help build this website (HTML layout, CSS, the Chart.js charts and the slider code). The course is about the ML, not web development, so we focused our own effort there.
+            <strong>What AI helped with:</strong>
           </p>
           <p class="text-sm" style="margin-top: 0.5rem;">
-            <strong>ML code:</strong> We also used AI for help with standard coding tasks: suggesting hyperparameter ranges, scikit-learn pipeline boilerplate, speeding up the bootstrap loops, and fixing convergence warnings.
+            <strong>Website (Claude, Gemini, ChatGPT):</strong> building this page (HTML layout, CSS, the Chart.js charts and the slider code), and later making fonts and spacing consistent and fixing the layout on phones.
           </p>
           <p class="text-sm" style="margin-top: 0.5rem;">
-            <strong>Our decisions:</strong> The problem setup, the derivation of $t^* = \frac{1}{1+r}$, the data cleaning choices, the model comparisons, the quantile ECE, the bootstrap tests and the conclusions were our decisions. We checked the results and can explain them.
+            <strong>ML code (Claude, Gemini, ChatGPT):</strong> suggesting hyperparameter ranges, scikit-learn pipeline boilerplate, speeding up the bootstrap loops, and fixing convergence warnings. An AI agent was also used to commit and push some of our early work to GitHub.
+          </p>
+          <p class="text-sm" style="margin-top: 0.5rem;">
+            <strong>Checking and extending (Claude, Anthropic):</strong> cross-checking our write-up against our output files, which found and corrected claims that didn't match our results (the Lasso/Ridge description, an outdated results table, and an error analysis that wasn't computed by any code). It wrote <code>src/error_analysis.py</code>, <code>src/robustness_checks.py</code>, the bill-value checks and data download in <code>src/data_loader.py</code>, the "Check a client" tool (Section 7b) with its test, the GitHub test workflow and the new notebook sections, and helped rewrite this page and the README in simpler language.
+          </p>
+          <p style="margin-top: 1rem;">
+            <strong>What we did ourselves:</strong>
+          </p>
+          <p class="text-sm" style="margin-top: 0.5rem;">
+            The project idea and proposal (question, dataset, cost-based framing, choice of models and metrics); the original pipeline (data loading and cleaning, preprocessing, training and tuning the eight models, evaluation, bootstrap, fairness audit, first tests and website content); the derivation of $t^* = \frac{1}{1+r}$; the data cleaning decisions; the evaluation design; interpreting the results and writing the conclusions. We also chose which AI suggestions to keep, ran the pipeline and tests ourselves, and reviewed the AI-written code and results, which we can explain.
           </p>
           <p class="text-sm text-muted" style="margin-top: 0.5rem;">
-            <strong>Results check:</strong> Claude (Anthropic) was used to cross-check the README and website against the generated output files, to write <code>src/error_analysis.py</code>, <code>src/robustness_checks.py</code>, the <code>check_bill_values</code> function in <code>src/data_loader.py</code>, the "Check a client" tool (Section 7b), the automatic data download, the GitHub test workflow and the updated notebook, and to rewrite the error analysis, calibration and collinearity text from their outputs. It also helped rewrite this page and the README in simpler language. We reviewed the results ourselves.
+            No passwords, API keys or private data are in this project. All data comes from the public UCI repository.
           </p>
           <p class="text-sm text-muted" style="margin-top: 0.5rem;">
             <strong>Citation:</strong> Yeh, I. C., & Lien, C. H. (2009). The comparisons of data mining techniques for the predictive accuracy of probability of default of credit card clients. <em>Expert Systems with Applications</em>, 36(2), 2473-2480.
