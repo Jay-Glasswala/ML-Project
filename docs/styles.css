@@ -523,3 +523,11 @@ input[type=range] {
 
 .cc-verdict { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.4rem; }
 .cc-verdict span { font-size: 1rem; padding: 0.3rem 0.7rem; }
+
+.cc-loader { margin-top: 1rem; background: var(--light-bg); border: 1px solid var(--border); border-radius: 8px; padding: 0.75rem 1rem; }
+.cc-loader-row { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; }
+.cc-loader-row .form-select { width: auto; min-width: 220px; padding: 0.35rem 0.5rem; font-size: 0.85rem; }
+.cc-loader-row .cc-filter { min-width: 0; }
+.cc-or { font-size: 0.8rem; color: var(--text-muted); }
+#cc-example-desc { margin: 0.5rem 0 0; }
+.cc-outcome { margin-top: 0.5rem; }

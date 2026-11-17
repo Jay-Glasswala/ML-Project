@@ -19,6 +19,8 @@ const CC_NAMES = {
 };
 
 let ccModel = null;
+let ccTestClients = null;   // all test clients, loaded for the random button
+let ccSource = null;        // where the current form values came from: {title, actual}
 
 document.addEventListener('DOMContentLoaded', async () => {
   try {
@@ -29,15 +31,17 @@ document.addEventListener('DOMContentLoaded', async () => {
     return;
   }
 
-  // example buttons, made from real test clients
-  const holder = document.getElementById('cc-example-buttons');
+  // dropdown of client types, each a real test client
+  const select = document.getElementById('cc-example-select');
   ccModel.examples.forEach((ex, i) => {
-    const btn = document.createElement('button');
-    btn.className = 'cc-example-btn';
-    btn.textContent = ex.label;
-    btn.addEventListener('click', () => loadExample(i));
-    holder.appendChild(btn);
+    const opt = document.createElement('option');
+    opt.value = i;
+    opt.textContent = ex.label;
+    select.appendChild(opt);
   });
+  select.addEventListener('change', () => loadExample(Number(select.value)));
+
+  document.getElementById('cc-random-btn').addEventListener('click', loadRandomClient);
 
   document.querySelectorAll('.cc-input').forEach(el => {
     el.addEventListener('input', () => { clearExampleHighlight(); updateClientPrediction(); });
@@ -48,17 +52,83 @@ document.addEventListener('DOMContentLoaded', async () => {
   loadExample(0);
 });
 
+function fillForm(inputs) {
+  CC_FIELDS.forEach(f => { document.getElementById('cc-' + f).value = inputs[f]; });
+}
+
 function loadExample(i) {
   const ex = ccModel.examples[i];
-  CC_FIELDS.forEach(f => { document.getElementById('cc-' + f).value = ex.inputs[f]; });
-  document.querySelectorAll('.cc-example-btn').forEach((b, j) => b.classList.toggle('active', i === j));
-  document.getElementById('cc-example-note').textContent =
-    `Loaded a real test client. What actually happened: ${ex.actual_default ? 'defaulted' : 'did not default'} in October 2005.`;
+  fillForm(ex.inputs);
+  document.getElementById('cc-example-select').value = i;
+  document.getElementById('cc-example-desc').textContent = ex.n_matching === null
+    ? ex.description
+    : `${ex.description} In the test set, ${ex.n_matching.toLocaleString()} clients match this type and ` +
+      `${(ex.default_rate_matching * 100).toFixed(1)}% of them defaulted. We loaded the most typical one.`;
+  ccSource = { title: `"${ex.label}" example (test client #${ex.test_index})`, actual: ex.actual_default };
   updateClientPrediction();
 }
 
+async function loadRandomClient() {
+  const btn = document.getElementById('cc-random-btn');
+  if (!ccTestClients) {
+    btn.textContent = 'Loading...';
+    try {
+      ccTestClients = await fetch('data/test_clients.json').then(r => r.json());
+    } catch (err) {
+      console.error('Could not load test_clients.json', err);
+      btn.textContent = 'Random test client';
+      return;
+    }
+    btn.textContent = 'Random test client';
+  }
+
+  const filter = document.getElementById('cc-random-filter').value;
+  const t = currentThreshold();
+  const candidates = [];
+  ccTestClients.rows.forEach((row, i) => {
+    const y = ccTestClients.default[i];
+    if (filter === 'default' && y !== 1) return;
+    if (filter === 'no_default' && y !== 0) return;
+    if (filter === 'mistake') {
+      const predicted = predictHGB(ccModel, rowToClient(row)) >= t ? 1 : 0;
+      if (predicted === y) return;
+    }
+    candidates.push(i);
+  });
+  if (candidates.length === 0) return;
+
+  const i = candidates[Math.floor(Math.random() * candidates.length)];
+  fillForm(rowToClient(ccTestClients.rows[i]));
+  document.getElementById('cc-example-select').selectedIndex = -1;
+  const groupText = {
+    any: 'test clients',
+    default: 'test clients who defaulted',
+    no_default: 'test clients who did not default',
+    mistake: 'test clients the model gets wrong at the current cost ratio'
+  }[filter];
+  document.getElementById('cc-example-desc').textContent =
+    `Picked at random from the ${candidates.length.toLocaleString()} ${groupText}. Click again for another one.`;
+  ccSource = { title: `Random test client #${i}`, actual: ccTestClients.default[i] };
+  updateClientPrediction();
+}
+
+function rowToClient(row) {
+  const client = {};
+  ccTestClients.columns.forEach((c, j) => { client[c] = row[j]; });
+  return client;
+}
+
+function currentThreshold() {
+  const slider = document.getElementById('cost-slider');
+  const r = slider ? parseFloat(slider.value) : 5;
+  return 1 / (1 + r);
+}
+
 function clearExampleHighlight() {
-  document.querySelectorAll('.cc-example-btn').forEach(b => b.classList.remove('active'));
+  if (!ccSource) return;
+  ccSource = null;
+  document.getElementById('cc-example-select').selectedIndex = -1;
+  document.getElementById('cc-example-desc').textContent = 'You edited the inputs, so this is now your own client.';
   document.getElementById('cc-example-note').textContent = '';
 }
 
@@ -104,6 +174,18 @@ function updateClientPrediction() {
        HGB probability ${pHGB.toFixed(3)} &ge; threshold ${t.toFixed(3)}. At a cost ratio of ${r.toFixed(1)} : 1, missing this client would cost more than a false alarm, so the bank should review them.`
     : `<div class="cc-verdict"><span class="badge-success">Prediction: won't default</span></div>
        HGB probability ${pHGB.toFixed(3)} &lt; threshold ${t.toFixed(3)}. At a cost ratio of ${r.toFixed(1)} : 1, flagging this client would most likely be a false alarm.`;
+
+  // what actually happened, if the client is a real test client
+  const note = document.getElementById('cc-example-note');
+  if (ccSource) {
+    const predicted = pHGB >= t ? 1 : 0;
+    note.innerHTML = `<div class="cc-outcome"><strong>${ccSource.title}.</strong> What actually happened: ` +
+      `${ccSource.actual ? 'defaulted' : 'did not default'} in October 2005, so at this cost ratio the model is ` +
+      (predicted === ccSource.actual ? '<span class="badge-success">right</span>' : '<span class="badge-danger">wrong</span>') +
+      '.</div>';
+  } else {
+    note.textContent = '';
+  }
 
   // what-if: replace one input at a time with a typical value
   const effects = CC_FIELDS.map(f => {

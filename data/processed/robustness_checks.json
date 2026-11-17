@@ -469,9 +469,9 @@
         "mean": -0.004,
         "ci95": [
           -0.245,
-          0.206
+          0.207
         ],
-        "share_zero": 0.11,
+        "share_zero": 0.13,
         "share_positive": 0.44
       },
       "BILL_AMT4": {
@@ -480,7 +480,7 @@
           -0.189,
           0.172
         ],
-        "share_zero": 0.06,
+        "share_zero": 0.05,
         "share_positive": 0.49
       },
       "BILL_AMT5": {
@@ -495,7 +495,7 @@
       "BILL_AMT6": {
         "mean": 0.06,
         "ci95": [
-          -0.098,
+          -0.097,
           0.271
         ],
         "share_zero": 0.05,

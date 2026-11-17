@@ -547,15 +547,26 @@
       <span class="section-num">Section 07b</span>
       <h2>Try It: Check a Client</h2>
       <p>
-        Fill in a client's details (or load one of the real test clients below) and see what our models predict. The prediction runs in your browser using the same fitted HistGradientBoosting and Ridge models as the rest of the page: <code>src/export_predictor.py</code> saves them to <code>data/predictor.json</code>, and <code>tests/test_predictor_parity.py</code> checks that the browser gives the same probability as scikit-learn for all 5,993 test clients.
+        Fill in a client's details, or load a real client from our test set (one of 13 types, or a random one), and see what our models predict. The prediction runs in your browser using the same fitted HistGradientBoosting and Ridge models as the rest of the page: <code>src/export_predictor.py</code> saves them to <code>data/predictor.json</code>, and <code>tests/test_predictor_parity.py</code> checks that the browser gives the same probability as scikit-learn for all 5,993 test clients.
       </p>
       <p class="note-text">
         This is a demo of our model, not a lending tool. It was trained on Taiwanese clients from 2005 and only sees the inputs below.
       </p>
 
-      <div class="cc-examples">
-        <span class="text-sm text-muted">Load a real test client:</span>
-        <span id="cc-example-buttons"></span>
+      <div class="cc-loader">
+        <div class="cc-loader-row">
+          <label for="cc-example-select"><strong>Load a type of client:</strong></label>
+          <select class="form-select" id="cc-example-select"></select>
+          <span class="cc-or">or</span>
+          <button class="cc-example-btn" id="cc-random-btn">Random test client</button>
+          <select class="form-select cc-filter" id="cc-random-filter" aria-label="Which clients the random button picks from">
+            <option value="any">from all clients</option>
+            <option value="default">who defaulted</option>
+            <option value="no_default">who did not default</option>
+            <option value="mistake">the model gets wrong</option>
+          </select>
+        </div>
+        <p class="text-sm text-muted" id="cc-example-desc"></p>
       </div>
 
       <div class="grid-2" style="margin-top: 1rem;">
@@ -742,7 +753,7 @@
           <tbody>
                 <tr><td><code>BILL_AMT1</code></td><td>-0.405 [-0.60, -0.25]</td><td>0%</td><td>0%</td></tr>
                 <tr><td><code>BILL_AMT2</code></td><td>+0.212 [-0.02, +0.47]</td><td>3%</td><td>100%</td></tr>
-                <tr><td><code>BILL_AMT3</code></td><td>+0.000 [-0.23, +0.20]</td><td>12%</td><td>97%</td></tr>
+                <tr><td><code>BILL_AMT3</code></td><td>+0.000 [-0.23, +0.20]</td><td>11%</td><td>97%</td></tr>
                 <tr><td><code>BILL_AMT4</code></td><td>-0.011 [-0.19, +0.16]</td><td>5%</td><td>100%</td></tr>
                 <tr><td><code>BILL_AMT5</code></td><td>+0.034 [-0.21, +0.27]</td><td>9%</td><td>100%</td></tr>
                 <tr><td><code>BILL_AMT6</code></td><td>+0.069 [-0.09, +0.26]</td><td>5%</td><td>100%</td></tr>

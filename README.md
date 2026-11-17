@@ -108,7 +108,7 @@ To check which of these weights we can actually trust, we refit the models on 10
 | :--- | :---: | :---: | :---: | :---: |
 | `BILL_AMT1` | -0.405 [-0.60, -0.25] | 0% | 0% | 0% |
 | `BILL_AMT2` | +0.212 [-0.02, +0.47] | 94% | 3% | 100% |
-| `BILL_AMT3` | +0.000 [-0.23, +0.20] | 52% | 12% | 97% |
+| `BILL_AMT3` | +0.000 [-0.23, +0.20] | 52% | 11% | 97% |
 | `BILL_AMT4` | -0.011 [-0.19, +0.16] | 47% | 5% | 100% |
 | `BILL_AMT5` | +0.034 [-0.21, +0.27] | 61% | 9% | 100% |
 | `BILL_AMT6` | +0.069 [-0.09, +0.26] | 78% | 5% | 100% |
@@ -160,7 +160,7 @@ We decided not to use different thresholds for different groups, since that woul
 The website is a static page on GitHub Pages (no backend). It has three interactive parts:
 * **Cost slider:** you pick a model and a cost ratio $r$ from 1 to 10. The page computes $t^* = 1/(1+r)$, re-scores all 5,993 test clients in the browser, and updates the confusion matrix, cost and recall.
 * **Fairness view:** shows false alarm and missed-defaulter rates for each sex, education or marital-status group at the current threshold.
-* **Check a client:** fill in one client's details (or load one of four real test clients) to get the default probability from HistGradientBoosting and Ridge, the flag / don't-flag decision at the slider's cost ratio, and a simple what-if showing which inputs move the probability most. The models run in the browser: `src/export_predictor.py` saves the fitted models to `web/data/predictor.json` and `web/predictor.js` evaluates them. `tests/test_predictor_parity.py` checks that the browser code gives the same probability as scikit-learn for all 5,993 test clients (it uses `node` if installed). This is a demo of the model, not a lending tool.
+* **Check a client:** fill in one client's details, or load a real test client (one of 13 types such as "overpaid", "inactive card" or "late only in September", or a random one, optionally only defaulters / non-defaulters / clients the model gets wrong), to get the default probability from HistGradientBoosting and Ridge, the flag / don't-flag decision at the slider's cost ratio, and a simple what-if showing which inputs move the probability most. The models run in the browser: `src/export_predictor.py` saves the fitted models to `web/data/predictor.json` and `web/predictor.js` evaluates them. `tests/test_predictor_parity.py` checks that the browser code gives the same probability as scikit-learn for all 5,993 test clients (it uses `node` if installed), that every example client really fits its type, and that the random-client data (`web/data/test_clients.json`) matches `test.csv`. After loading a real client, the page shows what actually happened to them and whether the model was right. This is a demo of the model, not a lending tool.
 
 It reads the saved test predictions from `web/data/test_results.json` (about 106 KB gzipped).
 

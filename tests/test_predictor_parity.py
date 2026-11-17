@@ -87,9 +87,35 @@ def test_predictor_js_matches_sklearn(tmp_path):
 
 
 @needs_artifacts
-def test_example_buttons_match_python():
+def test_examples_match_python_and_fit_their_label():
+    from src.export_predictor import EXAMPLE_TYPES
     model = json.load(open(PREDICTOR_JSON))
-    X = pd.DataFrame([e['inputs'] for e in model['examples']])[COLS]
-    hgb, _ = python_copy_of_browser(model, X)
-    for e, p in zip(model['examples'], hgb):
-        assert abs(p - e['python_prob_hgb']) < 1e-4
+    rules = {ex['key']: ex['rule'] for ex in EXAMPLE_TYPES}
+    X, p_hgb, _ = sklearn_probs()
+    y = pd.read_csv(os.path.join(PROCESSED, 'test.csv'))['default'].values
+
+    assert len(model['examples']) == len(EXAMPLE_TYPES)
+    for ex in model['examples']:
+        i = ex['test_index']
+        # the example is really that test client, with the right outcome and probability
+        assert ex['inputs'] == {c: int(X.iloc[i][c]) for c in COLS}
+        assert ex['actual_default'] == int(y[i])
+        assert abs(ex['python_prob_hgb'] - p_hgb[i]) < 1e-4
+        # and it really fits the description of its type
+        mask = np.asarray(rules[ex['key']](X.assign(default=y), p_hgb, y))
+        assert mask[i], f"example '{ex['label']}' does not fit its own rule"
+
+    # the browser maths gives the same probability for every example
+    hgb, _ = python_copy_of_browser(model, pd.DataFrame([e['inputs'] for e in model['examples']])[COLS])
+    for ex, p in zip(model['examples'], hgb):
+        assert abs(p - ex['python_prob_hgb']) < 1e-4
+
+
+@needs_artifacts
+def test_random_client_data_matches_test_csv():
+    path = os.path.join(ROOT, 'web', 'data', 'test_clients.json')
+    data = json.load(open(path))
+    test_df = pd.read_csv(os.path.join(PROCESSED, 'test.csv'))
+    assert data['columns'] == COLS
+    assert np.array_equal(np.array(data['rows']), test_df[COLS].values)
+    assert data['default'] == test_df['default'].tolist()
